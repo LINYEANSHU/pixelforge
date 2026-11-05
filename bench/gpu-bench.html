@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>PixelForge GPU 加速基准（实验性 WebGL2 后端 vs CPU）</title>
+<style>
+  body { font-family: "Segoe UI", "Microsoft YaHei", sans-serif; background: #101318; color: #d6dde8; margin: 0; padding: 16px; font-size: 13px; }
+  h1 { font-size: 16px; color: #5c8dff; }
+  table { border-collapse: collapse; margin: 10px 0; }
+  td, th { border: 1px solid #2a3240; padding: 3px 10px; text-align: left; }
+  th { background: #1e242e; }
+  .ok { color: #3ecf8e; } .warn { color: #ffb020; } .bad { color: #ff5a6a; }
+  canvas { image-rendering: pixelated; margin: 4px; border: 1px solid #2a3240; }
+  #meta { font-family: Consolas, monospace; color: #7d8798; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>PixelForge GPU 加速基准（实验性 WebGL2 后端）</h1>
+<div id="meta">运行中…</div>
+<div id="tbl"></div>
+<div id="gallery"></div>
+<script src="../src/core/pf.js"></script>
+<script src="../src/core/rng.js"></script>
+<script src="../src/core/palette.js"></script>
+<script src="../src/core/raster.js"></script>
+<script src="../src/core/raster-gpu.js"></script>
+<script src="../src/core/layers.js"></script>
+<script src="../src/core/effect.js"></script>
+<script src="../src/core/templates.js"></script>
+<script>
+(async () => {
+  const meta = [];
+  const PF = window.PF;
+  /* GPU 信息 */
+  const probe = document.createElement('canvas');
+  const pgl = probe.getContext('webgl2');
+  let gpuName = 'WebGL2 不可用';
+  let mrt = false;
+  if (pgl) {
+    const ext = pgl.getExtension('WEBGL_debug_renderer_info');
+    gpuName = ext ? pgl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : '已隐藏';
+    mrt = '不适用（双批次架构无需MRT）';
+  }
+  meta.push('GPU: ' + gpuName);
+  meta.push('WebGL2: ' + !!pgl + '  MRT独立混合(EXT_draw_buffers_indexed): ' + mrt);
+
+  const BENCH = { gpu: gpuName, mrt, entries: [], env512: [] };
+  let R_cpu = null, R_gpu = null;
+
+  function benchOne(id, size, frames) {
+    const eff = PF.makeEffect({ template: id, seed: 42, canvasSize: size, budget: size >= 512 ? 4000 : 1000 });
+    const N = eff.frameCount();
+    if (!R_cpu || R_cpu.size !== size) R_cpu = new PF.CpuRaster(size);
+    if (!R_gpu || R_gpu.size !== size) {
+      const c = document.createElement('canvas');
+      R_gpu = new PF.GpuRaster(c, size);
+    }
+    /* 预热各 12 帧 */
+    for (let k = 0; k < 12; k++) {
+      const kk = k % N;
+      eff.renderFrame(kk, R_cpu);
+      eff.renderFrame(kk, R_gpu);
+      R_cpu.composite(null);
+    }
+    /* CPU 计时（含合成） */
+    const outC = new Uint8ClampedArray(size * size * 4);
+    let t0 = performance.now();
+    for (let k = 0; k < frames; k++) { eff.renderFrame(k % N, R_cpu); R_cpu.composite(outC); }
+    const cpuMs = (performance.now() - t0) / frames;
+    /* GPU 计时：纯渲染（跳过读回） */
+    t0 = performance.now();
+    for (let k = 0; k < frames; k++) { eff.renderFrame(k % N, R_gpu); R_gpu.composite(null, false, true); }
+    const gpuRenderMs = (performance.now() - t0) / frames;
+    /* GPU 计时：含读回（一致性校验路径） */
+    const outG = new Uint8ClampedArray(size * size * 4);
+    t0 = performance.now();
+    for (let k = 0; k < frames; k++) { eff.renderFrame(k % N, R_gpu); R_gpu.composite(outG, false, false); }
+    const gpuFullMs = (performance.now() - t0) / frames;
+    /* 像素一致性：峰值帧 + 中段帧 */
+    let mae = 0, maxD = 0, diffN = 0;
+    for (const k of [Math.round(N * 0.5), Math.min(N - 1, Math.round(eff.thumbTime() * 60))]) {
+      eff.renderFrame(k, R_cpu);
+      const A = R_cpu.composite(null);
+      eff.renderFrame(k, R_gpu);
+      const B = R_gpu.composite(null);
+      let s = 0, mx = 0;
+      for (let i = 0; i < A.length; i++) {
+        const d = Math.abs(A[i] - B[i]);
+        s += d; if (d > mx) mx = d;
+      }
+      mae += s / A.length; maxD = Math.max(maxD, mx); diffN++;
+    }
+    return { id, size, cpuMs: +cpuMs.toFixed(3), gpuRenderMs: +gpuRenderMs.toFixed(3), gpuFullMs: +gpuFullMs.toFixed(3),
+             speedupRender: +(cpuMs / gpuRenderMs).toFixed(2), speedupFull: +(cpuMs / gpuFullMs).toFixed(2),
+             mae: +(mae / diffN).toFixed(2), maxDiff: maxD, active: eff.maxActive };
+  }
+
+  const ids = Object.keys(PF.TEMPLATES);
+  for (const id of ids) {
+    const r = benchOne(id, 256, 60);
+    BENCH.entries.push(r);
+    meta.push(id + '  CPU ' + r.cpuMs + 'ms  GPU纯渲 ' + r.gpuRenderMs + 'ms (×' + r.speedupRender + ')  GPU含读回 ' + r.gpuFullMs + 'ms  MAE ' + r.mae + '  maxΔ ' + r.maxDiff);
+    document.getElementById('meta').textContent = meta.join('\n');
+    await new Promise(res => setTimeout(res, 0)); // 让 UI 呼吸
+  }
+
+  /* 512px 重负载：三最重 */
+  for (const id of ['ambient_fog', 'smoke_plume', 'magic_explosion']) {
+    const r = benchOne(id, 512, 40);
+    BENCH.env512.push(r);
+    meta.push('[512] ' + id + '  CPU ' + r.cpuMs + 'ms  GPU纯渲 ' + r.gpuRenderMs + 'ms (×' + r.speedupRender + ')  MAE ' + r.mae);
+    document.getElementById('meta').textContent = meta.join('\n');
+    await new Promise(res => setTimeout(res, 0));
+  }
+
+  /* 表格 */
+  const tbl = document.getElementById('tbl');
+  let h = '<table><tr><th>模板</th><th>CPU ms</th><th>GPU纯渲 ms</th><th>加速×</th><th>GPU含读回 ms</th><th>MAE</th><th>maxΔ</th></tr>';
+  for (const r of BENCH.entries) {
+    const ok = r.mae <= 3 && r.maxDiff <= 60;
+    h += '<tr><td>' + r.id + '</td><td>' + r.cpuMs + '</td><td>' + r.gpuRenderMs + '</td><td>' + r.speedupRender + '</td><td>' + r.gpuFullMs + '</td><td class="' + (r.mae <= 3 ? 'ok' : 'warn') + '">' + r.mae + '</td><td>' + r.maxDiff + '</td></tr>';
+  }
+  h += '</table><table><tr><th>512px</th><th>CPU ms</th><th>GPU纯渲 ms</th><th>加速×</th><th>MAE</th></tr>';
+  for (const r of BENCH.env512) h += '<tr><td>' + r.id + '</td><td>' + r.cpuMs + '</td><td>' + r.gpuRenderMs + '</td><td>' + r.speedupRender + '</td><td>' + r.mae + '</td></tr>';
+  h += '</table>';
+  tbl.innerHTML = h;
+
+  /* 视觉抽样：峰值帧 CPU vs GPU 并排 */
+  const g = document.getElementById('gallery');
+  for (const id of ['magic_explosion', 'flame_jet', 'lightning_strike']) {
+    const eff = PF.makeEffect({ template: id, seed: 42, canvasSize: 256 });
+    const k = Math.min(eff.frameCount() - 1, Math.round(eff.thumbTime() * 60));
+    const rc = new PF.CpuRaster(256); eff.renderFrame(k, rc);
+    const rg = new PF.GpuRaster(document.createElement('canvas'), 256); eff.renderFrame(k, rg);
+    for (const [name, R] of [['CPU', rc], ['GPU', rg]]) {
+      const c = document.createElement('canvas'); c.width = c.height = 256;
+      c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(R.composite(null)), 256, 256), 0, 0);
+      const t = document.createElement('span'); t.textContent = name + ' ' + id + ' ';
+      g.append(t, c);
+    }
+    g.append(document.createElement('br'));
+  }
+
+  window.BENCH_RESULT = BENCH;
+  meta.push('完成 ✓ 结果已挂载 window.BENCH_RESULT');
+  document.getElementById('meta').textContent = meta.join('\n');
+})();
+</script>
+</body>
+</html>

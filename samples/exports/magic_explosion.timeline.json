@@ -1,0 +1,697 @@
+{
+  "format": "pixelforge.timeline",
+  "version": 1,
+  "app": "PixelForge 特效工厂 1.0.0",
+  "name": "magic_explosion",
+  "fps": 60,
+  "timebase": "1/60",
+  "frameCount": 132,
+  "durationSec": 2.2,
+  "loop": false,
+  "frameDurationMsExact": 16.666666666666668,
+  "frameTimeRule": "frameTimeSec(k) = k / fps。请勿以累加舍入毫秒的方式重建时间轴。",
+  "canvas": {
+    "width": 128,
+    "height": 128
+  },
+  "recipe": {
+    "format": "pixelforge.recipe",
+    "version": 1,
+    "app": "PixelForge 特效工厂 1.0.0",
+    "template": "magic_explosion",
+    "params": {
+      "scale": 1,
+      "intensity": 1,
+      "durationSec": 2.2,
+      "color": "magicBlue",
+      "smoke": 1
+    },
+    "seed": 42,
+    "loop": false,
+    "budget": 1000,
+    "canvasSize": 128,
+    "note": ""
+  },
+  "frames": [
+    {
+      "index": 0,
+      "file": "magic_explosion_0000.png",
+      "timeSec": 0
+    },
+    {
+      "index": 1,
+      "file": "magic_explosion_0001.png",
+      "timeSec": 0.016666666666666666
+    },
+    {
+      "index": 2,
+      "file": "magic_explosion_0002.png",
+      "timeSec": 0.03333333333333333
+    },
+    {
+      "index": 3,
+      "file": "magic_explosion_0003.png",
+      "timeSec": 0.05
+    },
+    {
+      "index": 4,
+      "file": "magic_explosion_0004.png",
+      "timeSec": 0.06666666666666667
+    },
+    {
+      "index": 5,
+      "file": "magic_explosion_0005.png",
+      "timeSec": 0.08333333333333333
+    },
+    {
+      "index": 6,
+      "file": "magic_explosion_0006.png",
+      "timeSec": 0.1
+    },
+    {
+      "index": 7,
+      "file": "magic_explosion_0007.png",
+      "timeSec": 0.11666666666666667
+    },
+    {
+      "index": 8,
+      "file": "magic_explosion_0008.png",
+      "timeSec": 0.13333333333333333
+    },
+    {
+      "index": 9,
+      "file": "magic_explosion_0009.png",
+      "timeSec": 0.15
+    },
+    {
+      "index": 10,
+      "file": "magic_explosion_0010.png",
+      "timeSec": 0.16666666666666666
+    },
+    {
+      "index": 11,
+      "file": "magic_explosion_0011.png",
+      "timeSec": 0.18333333333333332
+    },
+    {
+      "index": 12,
+      "file": "magic_explosion_0012.png",
+      "timeSec": 0.2
+    },
+    {
+      "index": 13,
+      "file": "magic_explosion_0013.png",
+      "timeSec": 0.21666666666666667
+    },
+    {
+      "index": 14,
+      "file": "magic_explosion_0014.png",
+      "timeSec": 0.23333333333333334
+    },
+    {
+      "index": 15,
+      "file": "magic_explosion_0015.png",
+      "timeSec": 0.25
+    },
+    {
+      "index": 16,
+      "file": "magic_explosion_0016.png",
+      "timeSec": 0.26666666666666666
+    },
+    {
+      "index": 17,
+      "file": "magic_explosion_0017.png",
+      "timeSec": 0.2833333333333333
+    },
+    {
+      "index": 18,
+      "file": "magic_explosion_0018.png",
+      "timeSec": 0.3
+    },
+    {
+      "index": 19,
+      "file": "magic_explosion_0019.png",
+      "timeSec": 0.31666666666666665
+    },
+    {
+      "index": 20,
+      "file": "magic_explosion_0020.png",
+      "timeSec": 0.3333333333333333
+    },
+    {
+      "index": 21,
+      "file": "magic_explosion_0021.png",
+      "timeSec": 0.35
+    },
+    {
+      "index": 22,
+      "file": "magic_explosion_0022.png",
+      "timeSec": 0.36666666666666664
+    },
+    {
+      "index": 23,
+      "file": "magic_explosion_0023.png",
+      "timeSec": 0.38333333333333336
+    },
+    {
+      "index": 24,
+      "file": "magic_explosion_0024.png",
+      "timeSec": 0.4
+    },
+    {
+      "index": 25,
+      "file": "magic_explosion_0025.png",
+      "timeSec": 0.4166666666666667
+    },
+    {
+      "index": 26,
+      "file": "magic_explosion_0026.png",
+      "timeSec": 0.43333333333333335
+    },
+    {
+      "index": 27,
+      "file": "magic_explosion_0027.png",
+      "timeSec": 0.45
+    },
+    {
+      "index": 28,
+      "file": "magic_explosion_0028.png",
+      "timeSec": 0.4666666666666667
+    },
+    {
+      "index": 29,
+      "file": "magic_explosion_0029.png",
+      "timeSec": 0.48333333333333334
+    },
+    {
+      "index": 30,
+      "file": "magic_explosion_0030.png",
+      "timeSec": 0.5
+    },
+    {
+      "index": 31,
+      "file": "magic_explosion_0031.png",
+      "timeSec": 0.5166666666666667
+    },
+    {
+      "index": 32,
+      "file": "magic_explosion_0032.png",
+      "timeSec": 0.5333333333333333
+    },
+    {
+      "index": 33,
+      "file": "magic_explosion_0033.png",
+      "timeSec": 0.55
+    },
+    {
+      "index": 34,
+      "file": "magic_explosion_0034.png",
+      "timeSec": 0.5666666666666667
+    },
+    {
+      "index": 35,
+      "file": "magic_explosion_0035.png",
+      "timeSec": 0.5833333333333334
+    },
+    {
+      "index": 36,
+      "file": "magic_explosion_0036.png",
+      "timeSec": 0.6
+    },
+    {
+      "index": 37,
+      "file": "magic_explosion_0037.png",
+      "timeSec": 0.6166666666666667
+    },
+    {
+      "index": 38,
+      "file": "magic_explosion_0038.png",
+      "timeSec": 0.6333333333333333
+    },
+    {
+      "index": 39,
+      "file": "magic_explosion_0039.png",
+      "timeSec": 0.65
+    },
+    {
+      "index": 40,
+      "file": "magic_explosion_0040.png",
+      "timeSec": 0.6666666666666666
+    },
+    {
+      "index": 41,
+      "file": "magic_explosion_0041.png",
+      "timeSec": 0.6833333333333333
+    },
+    {
+      "index": 42,
+      "file": "magic_explosion_0042.png",
+      "timeSec": 0.7
+    },
+    {
+      "index": 43,
+      "file": "magic_explosion_0043.png",
+      "timeSec": 0.7166666666666667
+    },
+    {
+      "index": 44,
+      "file": "magic_explosion_0044.png",
+      "timeSec": 0.7333333333333333
+    },
+    {
+      "index": 45,
+      "file": "magic_explosion_0045.png",
+      "timeSec": 0.75
+    },
+    {
+      "index": 46,
+      "file": "magic_explosion_0046.png",
+      "timeSec": 0.7666666666666667
+    },
+    {
+      "index": 47,
+      "file": "magic_explosion_0047.png",
+      "timeSec": 0.7833333333333333
+    },
+    {
+      "index": 48,
+      "file": "magic_explosion_0048.png",
+      "timeSec": 0.8
+    },
+    {
+      "index": 49,
+      "file": "magic_explosion_0049.png",
+      "timeSec": 0.8166666666666667
+    },
+    {
+      "index": 50,
+      "file": "magic_explosion_0050.png",
+      "timeSec": 0.8333333333333334
+    },
+    {
+      "index": 51,
+      "file": "magic_explosion_0051.png",
+      "timeSec": 0.85
+    },
+    {
+      "index": 52,
+      "file": "magic_explosion_0052.png",
+      "timeSec": 0.8666666666666667
+    },
+    {
+      "index": 53,
+      "file": "magic_explosion_0053.png",
+      "timeSec": 0.8833333333333333
+    },
+    {
+      "index": 54,
+      "file": "magic_explosion_0054.png",
+      "timeSec": 0.9
+    },
+    {
+      "index": 55,
+      "file": "magic_explosion_0055.png",
+      "timeSec": 0.9166666666666666
+    },
+    {
+      "index": 56,
+      "file": "magic_explosion_0056.png",
+      "timeSec": 0.9333333333333333
+    },
+    {
+      "index": 57,
+      "file": "magic_explosion_0057.png",
+      "timeSec": 0.95
+    },
+    {
+      "index": 58,
+      "file": "magic_explosion_0058.png",
+      "timeSec": 0.9666666666666667
+    },
+    {
+      "index": 59,
+      "file": "magic_explosion_0059.png",
+      "timeSec": 0.9833333333333333
+    },
+    {
+      "index": 60,
+      "file": "magic_explosion_0060.png",
+      "timeSec": 1
+    },
+    {
+      "index": 61,
+      "file": "magic_explosion_0061.png",
+      "timeSec": 1.0166666666666666
+    },
+    {
+      "index": 62,
+      "file": "magic_explosion_0062.png",
+      "timeSec": 1.0333333333333334
+    },
+    {
+      "index": 63,
+      "file": "magic_explosion_0063.png",
+      "timeSec": 1.05
+    },
+    {
+      "index": 64,
+      "file": "magic_explosion_0064.png",
+      "timeSec": 1.0666666666666667
+    },
+    {
+      "index": 65,
+      "file": "magic_explosion_0065.png",
+      "timeSec": 1.0833333333333333
+    },
+    {
+      "index": 66,
+      "file": "magic_explosion_0066.png",
+      "timeSec": 1.1
+    },
+    {
+      "index": 67,
+      "file": "magic_explosion_0067.png",
+      "timeSec": 1.1166666666666667
+    },
+    {
+      "index": 68,
+      "file": "magic_explosion_0068.png",
+      "timeSec": 1.1333333333333333
+    },
+    {
+      "index": 69,
+      "file": "magic_explosion_0069.png",
+      "timeSec": 1.15
+    },
+    {
+      "index": 70,
+      "file": "magic_explosion_0070.png",
+      "timeSec": 1.1666666666666667
+    },
+    {
+      "index": 71,
+      "file": "magic_explosion_0071.png",
+      "timeSec": 1.1833333333333333
+    },
+    {
+      "index": 72,
+      "file": "magic_explosion_0072.png",
+      "timeSec": 1.2
+    },
+    {
+      "index": 73,
+      "file": "magic_explosion_0073.png",
+      "timeSec": 1.2166666666666666
+    },
+    {
+      "index": 74,
+      "file": "magic_explosion_0074.png",
+      "timeSec": 1.2333333333333334
+    },
+    {
+      "index": 75,
+      "file": "magic_explosion_0075.png",
+      "timeSec": 1.25
+    },
+    {
+      "index": 76,
+      "file": "magic_explosion_0076.png",
+      "timeSec": 1.2666666666666666
+    },
+    {
+      "index": 77,
+      "file": "magic_explosion_0077.png",
+      "timeSec": 1.2833333333333334
+    },
+    {
+      "index": 78,
+      "file": "magic_explosion_0078.png",
+      "timeSec": 1.3
+    },
+    {
+      "index": 79,
+      "file": "magic_explosion_0079.png",
+      "timeSec": 1.3166666666666667
+    },
+    {
+      "index": 80,
+      "file": "magic_explosion_0080.png",
+      "timeSec": 1.3333333333333333
+    },
+    {
+      "index": 81,
+      "file": "magic_explosion_0081.png",
+      "timeSec": 1.35
+    },
+    {
+      "index": 82,
+      "file": "magic_explosion_0082.png",
+      "timeSec": 1.3666666666666667
+    },
+    {
+      "index": 83,
+      "file": "magic_explosion_0083.png",
+      "timeSec": 1.3833333333333333
+    },
+    {
+      "index": 84,
+      "file": "magic_explosion_0084.png",
+      "timeSec": 1.4
+    },
+    {
+      "index": 85,
+      "file": "magic_explosion_0085.png",
+      "timeSec": 1.4166666666666667
+    },
+    {
+      "index": 86,
+      "file": "magic_explosion_0086.png",
+      "timeSec": 1.4333333333333333
+    },
+    {
+      "index": 87,
+      "file": "magic_explosion_0087.png",
+      "timeSec": 1.45
+    },
+    {
+      "index": 88,
+      "file": "magic_explosion_0088.png",
+      "timeSec": 1.4666666666666666
+    },
+    {
+      "index": 89,
+      "file": "magic_explosion_0089.png",
+      "timeSec": 1.4833333333333334
+    },
+    {
+      "index": 90,
+      "file": "magic_explosion_0090.png",
+      "timeSec": 1.5
+    },
+    {
+      "index": 91,
+      "file": "magic_explosion_0091.png",
+      "timeSec": 1.5166666666666666
+    },
+    {
+      "index": 92,
+      "file": "magic_explosion_0092.png",
+      "timeSec": 1.5333333333333334
+    },
+    {
+      "index": 93,
+      "file": "magic_explosion_0093.png",
+      "timeSec": 1.55
+    },
+    {
+      "index": 94,
+      "file": "magic_explosion_0094.png",
+      "timeSec": 1.5666666666666667
+    },
+    {
+      "index": 95,
+      "file": "magic_explosion_0095.png",
+      "timeSec": 1.5833333333333333
+    },
+    {
+      "index": 96,
+      "file": "magic_explosion_0096.png",
+      "timeSec": 1.6
+    },
+    {
+      "index": 97,
+      "file": "magic_explosion_0097.png",
+      "timeSec": 1.6166666666666667
+    },
+    {
+      "index": 98,
+      "file": "magic_explosion_0098.png",
+      "timeSec": 1.6333333333333333
+    },
+    {
+      "index": 99,
+      "file": "magic_explosion_0099.png",
+      "timeSec": 1.65
+    },
+    {
+      "index": 100,
+      "file": "magic_explosion_0100.png",
+      "timeSec": 1.6666666666666667
+    },
+    {
+      "index": 101,
+      "file": "magic_explosion_0101.png",
+      "timeSec": 1.6833333333333333
+    },
+    {
+      "index": 102,
+      "file": "magic_explosion_0102.png",
+      "timeSec": 1.7
+    },
+    {
+      "index": 103,
+      "file": "magic_explosion_0103.png",
+      "timeSec": 1.7166666666666666
+    },
+    {
+      "index": 104,
+      "file": "magic_explosion_0104.png",
+      "timeSec": 1.7333333333333334
+    },
+    {
+      "index": 105,
+      "file": "magic_explosion_0105.png",
+      "timeSec": 1.75
+    },
+    {
+      "index": 106,
+      "file": "magic_explosion_0106.png",
+      "timeSec": 1.7666666666666666
+    },
+    {
+      "index": 107,
+      "file": "magic_explosion_0107.png",
+      "timeSec": 1.7833333333333334
+    },
+    {
+      "index": 108,
+      "file": "magic_explosion_0108.png",
+      "timeSec": 1.8
+    },
+    {
+      "index": 109,
+      "file": "magic_explosion_0109.png",
+      "timeSec": 1.8166666666666667
+    },
+    {
+      "index": 110,
+      "file": "magic_explosion_0110.png",
+      "timeSec": 1.8333333333333333
+    },
+    {
+      "index": 111,
+      "file": "magic_explosion_0111.png",
+      "timeSec": 1.85
+    },
+    {
+      "index": 112,
+      "file": "magic_explosion_0112.png",
+      "timeSec": 1.8666666666666667
+    },
+    {
+      "index": 113,
+      "file": "magic_explosion_0113.png",
+      "timeSec": 1.8833333333333333
+    },
+    {
+      "index": 114,
+      "file": "magic_explosion_0114.png",
+      "timeSec": 1.9
+    },
+    {
+      "index": 115,
+      "file": "magic_explosion_0115.png",
+      "timeSec": 1.9166666666666667
+    },
+    {
+      "index": 116,
+      "file": "magic_explosion_0116.png",
+      "timeSec": 1.9333333333333333
+    },
+    {
+      "index": 117,
+      "file": "magic_explosion_0117.png",
+      "timeSec": 1.95
+    },
+    {
+      "index": 118,
+      "file": "magic_explosion_0118.png",
+      "timeSec": 1.9666666666666666
+    },
+    {
+      "index": 119,
+      "file": "magic_explosion_0119.png",
+      "timeSec": 1.9833333333333334
+    },
+    {
+      "index": 120,
+      "file": "magic_explosion_0120.png",
+      "timeSec": 2
+    },
+    {
+      "index": 121,
+      "file": "magic_explosion_0121.png",
+      "timeSec": 2.0166666666666666
+    },
+    {
+      "index": 122,
+      "file": "magic_explosion_0122.png",
+      "timeSec": 2.033333333333333
+    },
+    {
+      "index": 123,
+      "file": "magic_explosion_0123.png",
+      "timeSec": 2.05
+    },
+    {
+      "index": 124,
+      "file": "magic_explosion_0124.png",
+      "timeSec": 2.066666666666667
+    },
+    {
+      "index": 125,
+      "file": "magic_explosion_0125.png",
+      "timeSec": 2.0833333333333335
+    },
+    {
+      "index": 126,
+      "file": "magic_explosion_0126.png",
+      "timeSec": 2.1
+    },
+    {
+      "index": 127,
+      "file": "magic_explosion_0127.png",
+      "timeSec": 2.1166666666666667
+    },
+    {
+      "index": 128,
+      "file": "magic_explosion_0128.png",
+      "timeSec": 2.1333333333333333
+    },
+    {
+      "index": 129,
+      "file": "magic_explosion_0129.png",
+      "timeSec": 2.15
+    },
+    {
+      "index": 130,
+      "file": "magic_explosion_0130.png",
+      "timeSec": 2.1666666666666665
+    },
+    {
+      "index": 131,
+      "file": "magic_explosion_0131.png",
+      "timeSec": 2.183333333333333
+    }
+  ]
+}

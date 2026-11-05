@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-11-03T15:13:23.239Z",
+  "templates": 26,
+  "contactSheets": 26,
+  "exports": [
+    "magic_explosion.pfx.json",
+    "magic_explosion.sheet.json",
+    "magic_explosion.timeline.json",
+    "magic_explosion_0030.png",
+    "magic_explosion_sequence.zip",
+    "magic_explosion_sheet.zip",
+    "parse_sample.json"
+  ],
+  "notes": "接触表列序: 起势12% / 前峰30% / 峰值42% / 扩散60% / 消散80% / 尾95%；均由固定步进采样 t=k/60 生成"
+}

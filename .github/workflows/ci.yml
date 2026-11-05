@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax check (node --check all .js)
+        run: |
+          git ls-files -z '*.js' '*.cjs' | xargs -0 -n 1 node --check
+
+      - name: Run test suite (18 tests)
+        run: node tests/run-tests.cjs

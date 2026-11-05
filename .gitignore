@@ -1,0 +1,21 @@
+# ---- 本地工作产物（不上传） ----
+OPTIMIZATION-REPORT.md
+tools/stress-result.json
+
+# archify 图工具工作区与本地预览渲染
+.archify/
+.preview/
+
+# docs 下的架构图/工作流图/数据流图 HTML/JSON（archify 本地产物；docs 里真正的文档保留推送）
+docs/工作流图.html
+docs/工作流图*.json
+docs/数据流图.html
+docs/数据流图*.json
+docs/架构图.html
+docs/架构图*.json
+
+# ---- 依赖与系统文件 ----
+node_modules/
+*.log
+.DS_Store
+Thumbs.db

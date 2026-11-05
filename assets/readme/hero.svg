@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="pf-title pf-desc">
+  <title id="pf-title">PixelForge — natural language to pixel game FX</title>
+  <desc id="pf-desc">Three pixel-art frames of an explosion (implosion, burst, afterglow) rendered on a 16×16 grid, next to the PixelForge title. Metadata chips list 29 templates, APNG / sprite sheet / PNG export, zero dependencies and a fixed t=k/60 time base.</desc>
+
+  <defs>
+    <pattern id="pxgrid" width="9" height="9" patternUnits="userSpaceOnUse">
+      <path d="M9 0H0V9" fill="none" stroke="#141922" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="340" rx="26" fill="#0a0c10"/>
+
+  <!-- ===== 标题区 ===== -->
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="64" y="86" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="18" letter-spacing="4" fill="#ff9a3c">PIXEL GAME FX GENERATOR</text>
+    <text x="62" y="158" font-size="76" font-weight="800" fill="#e8ecf4">Pixel<tspan fill="#7a8cff">Forge</tspan></text>
+    <text x="64" y="200" font-size="22" fill="#8a95a8">像素特效工厂 · Pixel FX Forge</text>
+    <text x="64" y="240" font-size="20" fill="#a8b0c0">自然语言描述 → 像素风游戏特效 · natural language → pixel-perfect game FX</text>
+  </g>
+
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="16">
+    <rect x="64" y="266" width="128" height="30" rx="6" fill="#12151c" stroke="#262c38"/>
+    <text x="128" y="286" text-anchor="middle" fill="#8a95a8">29 templates</text>
+    <rect x="204" y="266" width="176" height="30" rx="6" fill="#12151c" stroke="#262c38"/>
+    <text x="292" y="286" text-anchor="middle" fill="#8a95a8">APNG · sheet · PNG</text>
+    <rect x="392" y="266" width="104" height="30" rx="6" fill="#12151c" stroke="#262c38"/>
+    <text x="444" y="286" text-anchor="middle" fill="#8a95a8">zero deps</text>
+    <rect x="508" y="266" width="104" height="30" rx="6" fill="#12151c" stroke="#262c38"/>
+    <text x="560" y="286" text-anchor="middle" fill="#8a95a8">t = k/60</text>
+  </g>
+
+  <!-- ===== 帧 1：内聚 f008 ===== -->
+  <g transform="translate(640 64)">
+    <rect width="152" height="152" rx="8" fill="#0d1016" stroke="#232a36"/>
+    <rect x="4" y="4" width="144" height="144" fill="url(#pxgrid)"/>
+    <g transform="translate(4 4) scale(9)" shape-rendering="crispEdges">
+      <rect x="7" y="7" width="2" height="2" fill="#c8d4ff"/>
+      <rect x="5" y="6" width="1" height="1" fill="#7a8cff"/><rect x="10" y="6" width="1" height="1" fill="#7a8cff"/>
+      <rect x="5" y="9" width="1" height="1" fill="#7a8cff"/><rect x="10" y="9" width="1" height="1" fill="#7a8cff"/>
+      <rect x="6" y="4" width="1" height="1" fill="#4b3ff0"/><rect x="9" y="4" width="1" height="1" fill="#4b3ff0"/>
+      <rect x="6" y="11" width="1" height="1" fill="#4b3ff0"/><rect x="9" y="11" width="1" height="1" fill="#4b3ff0"/>
+      <rect x="4" y="4" width="1" height="1" fill="#4b3ff0"/><rect x="11" y="4" width="1" height="1" fill="#4b3ff0"/>
+      <rect x="4" y="11" width="1" height="1" fill="#4b3ff0"/><rect x="11" y="11" width="1" height="1" fill="#4b3ff0"/>
+      <rect x="2" y="6" width="1" height="1" fill="#241070"/><rect x="13" y="6" width="1" height="1" fill="#241070"/>
+      <rect x="2" y="9" width="1" height="1" fill="#241070"/><rect x="13" y="9" width="1" height="1" fill="#241070"/>
+      <rect x="6" y="2" width="1" height="1" fill="#241070"/><rect x="9" y="2" width="1" height="1" fill="#241070"/>
+      <rect x="6" y="13" width="1" height="1" fill="#241070"/><rect x="9" y="13" width="1" height="1" fill="#241070"/>
+      <rect x="1" y="1" width="1" height="1" fill="#241070" opacity="0.6"/><rect x="14" y="1" width="1" height="1" fill="#241070" opacity="0.6"/>
+      <rect x="1" y="14" width="1" height="1" fill="#241070" opacity="0.6"/><rect x="14" y="14" width="1" height="1" fill="#241070" opacity="0.6"/>
+    </g>
+  </g>
+
+  <!-- ===== 帧 2：爆发 f022 ===== -->
+  <g transform="translate(812 64)">
+    <rect width="152" height="152" rx="8" fill="#0d1016" stroke="#232a36"/>
+    <rect x="4" y="4" width="144" height="144" fill="url(#pxgrid)"/>
+    <g transform="translate(4 4) scale(9)" shape-rendering="crispEdges">
+      <rect x="6" y="7" width="4" height="2" fill="#fff6c8"/><rect x="7" y="6" width="2" height="4" fill="#fff6c8"/>
+      <rect x="7" y="7" width="2" height="2" fill="#ffffff"/>
+      <rect x="3" y="4" width="1" height="1" fill="#ffc83e"/><rect x="12" y="4" width="1" height="1" fill="#ffc83e"/>
+      <rect x="3" y="11" width="1" height="1" fill="#ffc83e"/><rect x="12" y="11" width="1" height="1" fill="#ffc83e"/>
+      <rect x="2" y="7" width="1" height="2" fill="#ff9a3c"/><rect x="13" y="7" width="1" height="2" fill="#ff9a3c"/>
+      <rect x="7" y="2" width="2" height="1" fill="#ff9a3c"/><rect x="7" y="13" width="2" height="1" fill="#ff9a3c"/>
+      <rect x="4" y="3" width="1" height="1" fill="#ff9a3c"/><rect x="11" y="3" width="1" height="1" fill="#ff9a3c"/>
+      <rect x="4" y="12" width="1" height="1" fill="#ff9a3c"/><rect x="11" y="12" width="1" height="1" fill="#ff9a3c"/>
+      <rect x="1" y="3" width="1" height="1" fill="#ff7b00"/><rect x="14" y="3" width="1" height="1" fill="#ff7b00"/>
+      <rect x="1" y="12" width="1" height="1" fill="#ff7b00"/><rect x="14" y="12" width="1" height="1" fill="#ff7b00"/>
+      <rect x="3" y="1" width="1" height="1" fill="#c93b00"/><rect x="12" y="1" width="1" height="1" fill="#c93b00"/>
+      <rect x="3" y="14" width="1" height="1" fill="#c93b00"/><rect x="12" y="14" width="1" height="1" fill="#c93b00"/>
+      <rect x="0" y="7" width="1" height="1" fill="#701400"/><rect x="15" y="7" width="1" height="1" fill="#701400"/>
+      <rect x="7" y="0" width="1" height="1" fill="#701400"/><rect x="8" y="15" width="1" height="1" fill="#701400"/>
+    </g>
+  </g>
+
+  <!-- ===== 帧 3：余波 f060 ===== -->
+  <g transform="translate(984 64)">
+    <rect width="152" height="152" rx="8" fill="#0d1016" stroke="#232a36"/>
+    <rect x="4" y="4" width="144" height="144" fill="url(#pxgrid)"/>
+    <g transform="translate(4 4) scale(9)" shape-rendering="crispEdges">
+      <rect x="9" y="3" width="2" height="2" fill="#3a3f4a"/><rect x="11" y="2" width="2" height="2" fill="#262a33"/>
+      <rect x="8" y="5" width="2" height="1" fill="#2a2d33"/><rect x="10" y="4" width="1" height="1" fill="#4a4e57"/>
+      <rect x="12" y="4" width="1" height="1" fill="#3a3f4a"/><rect x="6" y="3" width="1" height="1" fill="#262a33"/>
+      <rect x="7" y="7" width="2" height="2" fill="#181b22"/>
+      <rect x="4" y="9" width="1" height="1" fill="#ff9a3c"/><rect x="6" y="11" width="1" height="1" fill="#ffc83e"/>
+      <rect x="10" y="9" width="1" height="1" fill="#ff7b00"/><rect x="3" y="6" width="1" height="1" fill="#701400"/>
+      <rect x="12" y="8" width="1" height="1" fill="#c93b00"/><rect x="8" y="12" width="1" height="1" fill="#701400"/>
+      <rect x="5" y="4" width="1" height="1" fill="#ff7b00"/><rect x="11" y="11" width="1" height="1" fill="#ff9a3c" opacity="0.7"/>
+      <rect x="2" y="7" width="1" height="1" fill="#4b3ff0" opacity="0.5"/><rect x="13" y="7" width="1" height="1" fill="#4b3ff0" opacity="0.5"/>
+      <rect x="7" y="2" width="1" height="1" fill="#4b3ff0" opacity="0.5"/><rect x="7" y="13" width="1" height="1" fill="#4b3ff0" opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- ===== 帧标签与时间轴进度（呼应 UI 的 scrub 条） ===== -->
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="16" fill="#667084">
+    <text x="640" y="248">f 008</text>
+    <text x="812" y="248">f 022</text>
+    <text x="984" y="248">f 060</text>
+  </g>
+  <g>
+    <rect x="640" y="258" width="152" height="4" rx="2" fill="#1a1f28"/><rect x="640" y="258" width="9" height="4" rx="2" fill="#4b3ff0"/>
+    <rect x="812" y="258" width="152" height="4" rx="2" fill="#1a1f28"/><rect x="812" y="258" width="25" height="4" rx="2" fill="#ff7b00"/>
+    <rect x="984" y="258" width="152" height="4" rx="2" fill="#1a1f28"/><rect x="984" y="258" width="69" height="4" rx="2" fill="#3a3f4a"/>
+  </g>
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="16" fill="#565f6e">
+    <text x="640" y="296">implosion</text>
+    <text x="812" y="296">burst</text>
+    <text x="984" y="296">afterglow</text>
+  </g>
+</svg>

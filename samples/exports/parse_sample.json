@@ -1,0 +1,49 @@
+{
+  "input": "蓝紫色环形爆炸，持续2秒，细碎火花，透明背景",
+  "parsed": {
+    "ok": true,
+    "template": "magic_explosion",
+    "templateName": "魔法爆炸",
+    "params": {
+      "scale": 1,
+      "intensity": 1.1,
+      "durationSec": 2,
+      "color": "#7a4aff",
+      "smoke": 0.3
+    },
+    "matched": [
+      {
+        "token": "持续2秒",
+        "meaning": "持续时间 2 秒"
+      },
+      {
+        "token": "蓝紫",
+        "meaning": "颜色 蓝紫"
+      },
+      {
+        "token": "爆炸",
+        "meaning": "模板 魔法爆炸"
+      },
+      {
+        "token": "透明背景",
+        "meaning": "修饰 透明背景"
+      },
+      {
+        "token": "细碎",
+        "meaning": "修饰 细碎"
+      },
+      {
+        "token": "火花",
+        "meaning": "修饰 火花"
+      },
+      {
+        "token": "环形",
+        "meaning": "修饰 环形"
+      }
+    ],
+    "unknown": [],
+    "transparent": true,
+    "confidence": 0.9,
+    "color": "#7a4aff"
+  }
+}

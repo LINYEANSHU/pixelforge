@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PixelForge 特效工厂</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header id="topbar">
+  <div class="logo">◆ PixelForge <span class="sub" data-i18n="ui.tagline">特效工厂</span></div>
+  <div class="badges">
+    <span class="badge ok" data-i18n="badge.offline">完全离线</span>
+    <span class="badge ok" data-i18n="badge.cpu">CPU 渲染</span>
+    <span class="badge" data-i18n="badge.timebase">60 FPS 时间基 1/60</span>
+  </div>
+  <div class="topbtns">
+    <label class="tgl"><input type="checkbox" id="tgl-shake" checked> <span data-i18n="top.shake">震屏</span></label>
+    <label class="tgl"><input type="checkbox" id="tgl-flash"> <span data-i18n="top.reduceFlash">抑制剧烈闪烁</span></label>
+    <label class="tgl"><input type="checkbox" id="tgl-stage"> <span data-i18n="top.stage">测试场</span></label>
+    <button id="btn-stage-play" class="mini" data-i18n="top.attackTest" data-i18n-title="top.attackTestTip" title="播放一次攻击：前摇→命中→后摇">▶ 攻击测试</button>
+    <button id="btn-hud" class="mini">HUD</button>
+    <button id="btn-lang" class="mini" data-i18n="lang.toggle" data-i18n-title="lang.toggleTip" title="切换语言 / Switch language">🌐 EN</button>
+  </div>
+</header>
+
+<main id="layout">
+  <!-- 左：模板库 -->
+  <aside id="left">
+    <div class="panel-title"><span data-i18n="panel.templates">模板库</span> <span id="tpl-count" class="dim"></span></div>
+    <div id="cats" class="cats"></div>
+    <div id="grid" class="grid"></div>
+    <div class="panel-title" data-i18n="panel.favs">收藏</div>
+    <div id="favs" class="favs"><div class="dim small" data-i18n="favs.hint">在参数面板点 ☆ 收藏当前配方</div></div>
+  </aside>
+
+  <!-- 中：预览 -->
+  <section id="center">
+    <div id="preview-wrap">
+      <canvas id="preview"></canvas>
+      <div id="hud" class="hidden"></div>
+      <div id="nameplate"><b id="np-name">—</b><span id="np-desc" class="dim"></span></div>
+    </div>
+    <div id="timeline">
+      <div class="tl-row">
+        <button id="btn-play" class="tl-btn" data-i18n-title="tl.playTip" title="播放/暂停">⏸</button>
+        <button id="btn-prev" class="tl-btn" data-i18n-title="tl.prevTip" title="上一帧">⏮</button>
+        <button id="btn-next" class="tl-btn" data-i18n-title="tl.nextTip" title="下一帧">⏭</button>
+        <button id="btn-restart" class="tl-btn" data-i18n-title="tl.restartTip" title="回到起点">↺</button>
+        <select id="speed" data-i18n-title="tl.speedTip" title="播放速度">
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+        </select>
+        <div id="scrub-wrap">
+          <input type="range" id="scrub" min="0" max="131" value="0" step="1">
+          <div id="scrub-fill"></div>
+        </div>
+        <span id="frame-label" class="mono">0 / 132</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 右：配方 / 参数 / 导出 -->
+  <aside id="right">
+    <details id="recipe-box" open>
+      <summary><span data-i18n="panel.recipe">文字配方</span> <span class="dim small" data-i18n="panel.recipeNote">（离线词典·支持范围有限）</span></summary>
+      <div class="inner">
+        <textarea id="recipe-input" rows="2" data-i18n-ph="recipe.placeholder" placeholder="例：蓝紫色环形爆炸，持续2秒，细碎火花"></textarea>
+        <div class="row">
+          <button id="btn-parse" class="primary" data-i18n="recipe.parse">解析并应用</button>
+          <button id="btn-examples" class="mini" data-i18n="recipe.examples">示例</button>
+        </div>
+        <div id="parse-result"></div>
+      </div>
+    </details>
+
+    <details id="param-box" open>
+      <summary data-i18n="panel.params">参数</summary>
+      <div class="inner">
+        <div id="params"></div>
+        <div class="row seed-row">
+          <span class="lbl" data-i18n="param.seed">种子</span>
+          <input type="number" id="seed" value="1">
+          <button id="btn-dice" class="mini" title="🎲">🎲</button>
+          <label class="tgl"><input type="checkbox" id="loop-tgl"> <span data-i18n="param.loop">循环</span></label>
+        </div>
+        <div class="row seed-row">
+          <span class="lbl" data-i18n="param.canvas">画布</span>
+          <select id="canvas-size">
+            <option value="64">64</option>
+            <option value="128">128</option>
+            <option value="256" selected>256</option>
+            <option value="512">512</option>
+          </select>
+          <span class="lbl" data-i18n="param.budget">预算</span>
+          <input type="number" id="budget" value="1000" min="64" max="4000" step="50" data-i18n-title="param.budgetTip" title="活动粒子上限">
+        </div>
+        <div class="row">
+          <button id="btn-variant" class="primary" data-i18n="param.variant">🎲 一键变体</button>
+          <select id="variant-style" data-i18n-title="param.variantStyleTip" title="变体幅度">
+            <option value="subtle" data-i18n="variant.subtle">轻微</option>
+            <option value="normal" selected data-i18n="variant.normal">标准</option>
+            <option value="wild" data-i18n="variant.wild">狂野</option>
+          </select>
+          <button id="btn-undo" class="mini" data-i18n="param.undo" data-i18n-title="param.undoTip" title="撤销">↶ 撤销</button>
+          <button id="btn-fav" class="mini" data-i18n-title="param.favTip" title="收藏当前配方">☆</button>
+        </div>
+      </div>
+    </details>
+
+    <details id="combo-box">
+      <summary><span data-i18n="panel.combo">组合器</span> <span class="dim small" data-i18n="panel.comboNote">（最多 4 层）</span></summary>
+      <div class="inner">
+        <div id="combo-slots"></div>
+        <div class="row">
+          <button id="btn-combo-apply" class="primary" data-i18n="combo.apply">应用组合</button>
+          <button id="btn-combo-clear" class="mini" data-i18n="combo.clear">清除</button>
+        </div>
+      </div>
+    </details>
+
+    <details id="export-box" open>
+      <summary data-i18n="panel.export">导出</summary>
+      <div class="inner">
+        <div class="row">
+          <button id="exp-frame" class="exp" data-i18n="export.frame">单帧 PNG</button>
+          <button id="exp-seq" class="exp" data-i18n="export.sequence">PNG 序列</button>
+        </div>
+        <div class="row">
+          <button id="exp-apng" class="exp" data-i18n="export.apng">APNG 动图</button>
+          <button id="exp-sheet" class="exp" data-i18n="export.sheet">Sprite Sheet</button>
+        </div>
+        <div class="row">
+          <button id="exp-batch" class="exp" data-i18n="export.batch">批量导出分类</button>
+          <button id="exp-recipe" class="exp" data-i18n="export.recipe">配方 JSON</button>
+        </div>
+        <div class="row small-row">
+          <span class="lbl" data-i18n="export.maxPage">帧页上限</span>
+          <select id="sheet-maxpage">
+            <option value="1024">1024</option>
+            <option value="2048">2048</option>
+            <option value="4096" selected>4096</option>
+          </select>
+          <span class="lbl" data-i18n="export.padding">间距</span>
+          <input type="number" id="sheet-pad" value="2" min="0" max="16" style="width:3.2em">
+        </div>
+        <div id="export-progress" class="hidden">
+          <div id="export-bar-track"><div id="export-bar"></div></div>
+          <span id="export-label" class="small"></span>
+          <button id="export-cancel" class="mini danger" data-i18n="export.cancel">取消</button>
+        </div>
+        <div id="export-links"></div>
+        <div class="dim small" style="margin-top:.4em" data-i18n="export.hint">
+          序列默认 60 FPS · t=k/60 精确采样 · 透明通道 · 循环不重复首帧
+        </div>
+      </div>
+    </details>
+  </aside>
+</main>
+
+<div id="toast" class="hidden"></div>
+<script src="src/core/pf.js"></script>
+<script src="src/core/rng.js"></script>
+<script src="src/core/palette.js"></script>
+<script src="src/core/raster.js"></script>
+<script src="src/core/layers.js"></script>
+<script src="src/core/effect.js"></script>
+<script src="src/core/templates.js"></script>
+<script src="src/core/parser.js"></script>
+<script src="src/core/variant.js"></script>
+<script src="src/core/stage.js"></script>
+<script src="src/core/export/png.js"></script>
+<script src="src/core/export/zip.js"></script>
+<script src="src/core/export/job.js"></script>
+<script src="src/ui/i18n.js"></script>
+<script src="src/ui/app.js"></script>
+</body>
+</html>
