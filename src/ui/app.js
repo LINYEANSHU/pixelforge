@@ -33,12 +33,15 @@
     job: null,           // 导出任务 {id, worker|null, cancelFlag}
   };
   try { S.favs = JSON.parse(localStorage.getItem('pf.favs') || '[]'); } catch (e) { S.favs = []; }
+  if (!Array.isArray(S.favs)) S.favs = [];
+  S.favs = S.favs.filter(f => f && typeof f.label === 'string' && f.config && typeof f.config === 'object');
+  let previewDirty = true;
 
   const R = new PF.CpuRaster(256);
   const offCanvas = document.createElement('canvas');
-  const offCtx = offCanvas.getContext('2d');
+  const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
   const disp = $('preview');
-  const dctx = disp.getContext('2d');
+  const dctx = disp.getContext('2d', { willReadFrequently: true });
   const compBuf = { buf: null };
   const compImg = { img: null, size: 0 };   // 复用 ImageData，避免每帧分配+双重拷贝
 
@@ -66,11 +69,19 @@
       return false;
     }
     R.resize(S.eff.canvasSize);
+    syncConfigControls();
     offCanvas.width = offCanvas.height = S.eff.canvasSize;
     S.t = 0; S.stageT = -1;
     fitDisplay();
     renderNow();   // 立即出画面（后台节流下 rAF 可能延迟）
     return true;
+  }
+
+  function syncConfigControls() {
+    $('seed').value = S.eff.seed === undefined ? (S.config.seed || 1) : S.eff.seed;
+    $('loop-tgl').checked = !!S.config.loop;
+    $('canvas-size').value = S.eff.canvasSize;
+    $('budget').value = S.eff.budget || S.config.budget || 1000;
   }
 
   function currentDuration() { return S.eff ? S.eff.durationSec : 2; }
@@ -81,12 +92,15 @@
     const wrap = $('preview-wrap');
     const pad = 24;
     const w = wrap.clientWidth - pad, h = wrap.clientHeight - pad;
-    const size = Math.max(64, Math.min(w, h, 720));
+    const size = Math.max(1, Math.min(w, h, 720));
     const q = Math.max(1, Math.floor(size / S.eff.canvasSize));
     disp.width = disp.height = q * S.eff.canvasSize;
+    disp.style.width = disp.style.height = Math.min(size, disp.width) + 'px';
     dctx.imageSmoothingEnabled = false;
   }
-  window.addEventListener('resize', () => { if (S.eff) fitDisplay(); });
+  const resizePreview = () => { if (S.eff) { fitDisplay(); previewDirty = true; } };
+  window.addEventListener('resize', resizePreview);
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(resizePreview).observe($('preview-wrap'));
 
   /* ---------- 模板网格 ---------- */
   const thumbCache = {};
@@ -114,9 +128,11 @@
       const def = PF.TEMPLATES[id];
       if (S.cat !== 'all' && def.category !== S.cat) continue;
       n++;
-      const cell = document.createElement('div');
+      const cell = document.createElement('button');
+      cell.type = 'button';
       cell.className = 'cell' + (S.config.template === id && !S.isCombo ? ' on' : '');
-      cell.innerHTML = '<img loading="lazy" src="' + makeThumb(id) + '"><div class="nm">' + esc(I18N.tplName(def)) + (def.loop ? ' ⟳' : '') + '</div>';
+      cell.setAttribute('aria-pressed', String(S.config.template === id && !S.isCombo));
+      cell.innerHTML = '<img loading="lazy" alt="" width="72" height="72" src="' + makeThumb(id) + '"><div class="nm">' + esc(I18N.tplName(def)) + (def.loop ? ' ⟳' : '') + '</div>';
       cell.title = I18N.tplDesc(def) || I18N.tplName(def);
       cell.onclick = () => {
         pushUndo();
@@ -132,8 +148,10 @@
     const cats = $('cats');
     cats.innerHTML = '';
     const mk = (id, name) => {
-      const el = document.createElement('div');
+      const el = document.createElement('button');
+      el.type = 'button';
       el.className = 'cat' + (S.cat === id ? ' on' : '');
+      el.setAttribute('aria-pressed', String(S.cat === id));
       el.textContent = name;
       el.onclick = () => { S.cat = id; buildCats(); buildGrid(); };
       cats.appendChild(el);
@@ -164,10 +182,13 @@
       const row = document.createElement('div');
       row.className = 'p-row';
       const cur = S.config.params[s.key] !== undefined ? S.config.params[s.key] : s.default;
-      const lock = document.createElement('span');
+      const lock = document.createElement('button');
+      lock.type = 'button';
       lock.className = 'lock' + (S.locks[s.key] ? ' on' : '');
-      lock.textContent = S.locks[s.key] ? '🔒' : '🔓';
+      lock.innerHTML = '<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="12" height="8" rx="2"/><path d="' + (S.locks[s.key] ? 'M6 9V6a4 4 0 0 1 8 0v3' : 'M6 9V6a4 4 0 0 1 7-2.6') + '"/></svg>';
       lock.title = T('param.lockTip');
+      lock.setAttribute('aria-label', T('param.lockTip') + ': ' + I18N.paramLabel(s.label));
+      lock.setAttribute('aria-pressed', String(!!S.locks[s.key]));
       lock.onclick = () => { S.locks[s.key] = !S.locks[s.key]; buildParams(); };
       const name = document.createElement('span');
       name.className = 'p-name';
@@ -178,6 +199,7 @@
         const min = isAngle ? 0 : s.min, max = isAngle ? 359 : s.max;
         const sl = document.createElement('input');
         sl.type = 'range'; sl.min = min; sl.max = max; sl.step = isAngle ? 1 : (s.step || 0.01); sl.value = cur;
+        sl.setAttribute('aria-label', I18N.paramLabel(s.label));
         const val = document.createElement('span');
         val.className = 'p-val';
         val.textContent = isAngle ? (cur + '°') : (+cur).toFixed(2);
@@ -193,10 +215,13 @@
         sw.className = 'ramp-swatches';
         const opts = s.options || Object.keys(PF.palette.R);
         for (const o of opts) {
-          const el = document.createElement('div');
+          const el = document.createElement('button');
+          el.type = 'button';
           el.className = 'swatch' + (o === cur ? ' on' : '');
           el.style.background = rampSwatch(o);
           el.title = o;
+          el.setAttribute('aria-label', I18N.paramLabel(s.label) + ': ' + o);
+          el.setAttribute('aria-pressed', String(o === cur));
           el.onclick = () => { S.config.params[s.key] = o; applyParamLive(); buildParams(); };
           sw.appendChild(el);
         }
@@ -204,6 +229,7 @@
       } else if (s.type === 'bool') {
         const cb = document.createElement('input');
         cb.type = 'checkbox'; cb.checked = !!cur;
+        cb.setAttribute('aria-label', I18N.paramLabel(s.label));
         cb.onchange = () => { S.config.params[s.key] = cb.checked; applyParamLive(); };
         row.append(lock, name, cb);
       }
@@ -215,6 +241,8 @@
     if (S.isCombo) return;
     const eff = PF.makeEffect(S.config);
     S.eff = eff;
+    S.t = Math.min(S.t, Math.max(0, eff.durationSec - PF.DT));
+    previewDirty = true;
     if (eff.canvasSize !== R.size) { R.resize(eff.canvasSize); offCanvas.width = offCanvas.height = eff.canvasSize; fitDisplay(); }
   }
 
@@ -251,11 +279,11 @@
   };
 
   /* ---------- 顶栏开关 ---------- */
-  $('tgl-shake').onchange = e => { S.shake = e.target.checked; };
-  $('tgl-flash').onchange = e => { S.reduceFlash = e.target.checked; };
-  $('tgl-stage').onchange = e => { S.stageOn = e.target.checked; if (S.stageOn) S.stageT = -1; };
+  $('tgl-shake').onchange = e => { S.shake = e.target.checked; previewDirty = true; };
+  $('tgl-flash').onchange = e => { S.reduceFlash = e.target.checked; previewDirty = true; };
+  $('tgl-stage').onchange = e => { S.stageOn = e.target.checked; if (S.stageOn) S.stageT = -1; previewDirty = true; };
   $('btn-stage-play').onclick = () => { S.stageOn = true; $('tgl-stage').checked = true; S.stageT = 0; S.t = 0; };
-  $('btn-hud').onclick = () => { S.hudOn = !S.hudOn; $('hud').classList.toggle('hidden', !S.hudOn); };
+  $('btn-hud').onclick = () => { S.hudOn = !S.hudOn; $('hud').classList.toggle('hidden', !S.hudOn); previewDirty = true; };
 
   /* ---------- 文字配方 ---------- */
   /* 匹配项含义本地化：parser 输出结构化 {k, v}，由 UI 决定文案 */
@@ -369,7 +397,7 @@
     S.favs.forEach((f, i) => {
       const el = document.createElement('div');
       el.className = 'fav-item';
-      el.innerHTML = '<span>' + esc(f.label) + '</span><span class="del" title="' + esc(T('fav.delTip')) + '">✕</span>';
+      el.innerHTML = '<button class="fav-load">' + esc(f.label) + '</button><button class="del" aria-label="' + esc(T('fav.delTip') + ': ' + f.label) + '" title="' + esc(T('fav.delTip')) + '">✕</button>';
       el.onclick = ev => {
         if (ev.target.classList.contains('del')) { S.favs.splice(i, 1); saveFavs(); renderFavs(); return; }
         pushUndo();
@@ -432,6 +460,7 @@
   /* ---------- 预览渲染（可脱离 rAF 单独调用） ---------- */
   function renderNow() {
     if (!S.eff) return;
+    previewDirty = false;
     const t0 = performance.now();
     R.clear();
     let effT = S.t;
@@ -486,6 +515,7 @@
     requestAnimationFrame(loop);
     const dt = Math.min(0.1, (ts - lastTs) / 1000 || 0);
     lastTs = ts;
+    if (document.hidden) return;
     /* FPS 统计 */
     S.frames++; S.fpsT += dt;
     if (S.fpsT >= 0.5) { S.fps = Math.round(S.frames / S.fpsT); S.frames = 0; S.fpsT = 0; }
@@ -495,15 +525,19 @@
       const D = currentDuration();
       if (S.t >= D) S.t %= D;      // 预览始终循环（含一次性效果），便于调参
     }
-    if (S.stageOn && S.stageT >= 0) {
+    const advancingStage = S.stageOn && S.stageT >= 0;
+    if (advancingStage) {
       S.stageT += dt * S.speed;
       if (S.stageT > STAGE.WINDUP + STAGE.RECOVER + 0.6) S.stageT = -1;
     }
-    renderNow();
+    if (S.playing || advancingStage || previewDirty) renderNow();
   }
 
   /* ---------- 导出 ---------- */
   function ensureWorker() {
+    // file:// and standalone builds cannot load this relative worker reliably.
+    // Use the existing CPU chunked exporter rather than fail asynchronously.
+    if (location.protocol === 'file:') return null;
     try {
       const w = new Worker('src/export.worker.js');
       return w;
@@ -525,6 +559,7 @@
   };
   function finishExport(res, fallbackName) {
     const box = $('export-links');
+    box.querySelectorAll('a').forEach(a => URL.revokeObjectURL(a.href));
     box.innerHTML = '';
     if (!res || res.cancelled) { toast(T('toast.exportCancelled')); hideProgress(); S.job = null; return; }
     for (const e of res.entries) {
@@ -599,7 +634,7 @@
 
   /* ---------- 键盘 ---------- */
   window.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+    if (e.target.closest('input, textarea, select, button, summary') || e.target.isContentEditable) return;
     if (e.code === 'Space') { e.preventDefault(); $('btn-play').click(); }
     else if (e.code === 'ArrowLeft') $('btn-prev').click();
     else if (e.code === 'ArrowRight') $('btn-next').click();
@@ -608,6 +643,15 @@
 
   /* ---------- 语言切换 ---------- */
   $('btn-lang').onclick = () => I18N.toggle();
+  document.addEventListener('click', e => {
+    if (!$('preview-options').contains(e.target)) $('preview-options').open = false;
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && $('preview-options').open) {
+      $('preview-options').open = false;
+      $('preview-options').querySelector('summary').focus();
+    }
+  });
   I18N.onChange(() => {
     /* 静态文案由 I18N.apply 刷新；动态区域按当前语言重建 */
     buildCats();

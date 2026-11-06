@@ -8,10 +8,11 @@
 <style>
 /* PixelForge 特效工厂 —— 界面样式（系统字体，无外部资源） */
 :root {
-  --bg0: #101318; --bg1: #171b22; --bg2: #1e242e; --bg3: #262d3a;
-  --fg: #d6dde8; --dim: #7d8798; --acc: #5c8dff; --acc2: #8b5cf6;
-  --ok: #3ecf8e; --warn: #ffb020; --danger: #ff5a6a;
-  --line: #2a3240;
+  --bg0: #181c18; --bg1: #22291f; --bg2: #2c3428; --bg3: #3a4535;
+  --fg: #eeecdc; --dim: #b7c2a9; --acc: #dfb47b; --acc2: #9cb9a0;
+  --ok: #accbad; --warn: #e5be7e; --danger: #f0a59a;
+  --line: #485440;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -47,7 +48,7 @@ body {
 /* ---------- 主布局 ---------- */
 #layout { flex: 1 1 auto; display: flex; min-height: 0; }
 #left {
-  width: 232px; flex: 0 0 auto; background: var(--bg1);
+  width: 224px; flex: 0 0 auto; background: var(--bg1);
   border-right: 1px solid var(--line); overflow-y: auto; padding: 10px;
 }
 #center { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
@@ -64,16 +65,17 @@ body {
   font-size: 11px; padding: 3px 8px; border-radius: 10px; cursor: pointer;
   background: var(--bg2); border: 1px solid var(--line); color: var(--dim);
 }
-.cat.on { color: #fff; background: var(--acc); border-color: var(--acc); }
+.cat.on { color: #241b10; background: var(--acc); border-color: var(--acc); }
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .cell {
+  padding: 0; text-align: left; font: inherit;
   background: var(--bg2); border: 1px solid var(--line); border-radius: 6px;
   cursor: pointer; overflow: hidden; position: relative;
   transition: border-color .12s;
 }
 .cell:hover { border-color: var(--acc); }
 .cell.on { border-color: var(--acc); box-shadow: 0 0 0 1px var(--acc); }
-.cell img { width: 100%; aspect-ratio: 1; display: block; image-rendering: pixelated; background: #0a0c10; }
+.cell img { width: 100%; height: auto; aspect-ratio: 1; display: block; image-rendering: pixelated; background: #0a0c10; }
 .cell .nm {
   font-size: 11px; padding: 3px 5px; color: var(--fg); white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis;
@@ -87,18 +89,20 @@ body {
 .fav-item:hover { border-color: var(--acc); }
 .fav-item .del { color: var(--dim); cursor: pointer; padding: 0 4px; }
 .fav-item .del:hover { color: var(--danger); }
+.fav-item .fav-load { flex: 1; min-width: 0; text-align: left; overflow-wrap: anywhere; background: transparent; border: 0; padding: 4px 0; }
+.fav-item .del { flex: none; background: transparent; border: 0; min-width: 32px; min-height: 32px; }
 
 /* ---------- 预览区 ---------- */
 #preview-wrap {
   flex: 1 1 auto; position: relative; min-height: 0;
   display: flex; align-items: center; justify-content: center;
   background:
-    repeating-conic-gradient(#151920 0% 25%, #1b2029 0% 50%) 0 0 / 24px 24px;
+    repeating-conic-gradient(#171e19 0% 25%, #1d261f 0% 50%) 0 0 / 24px 24px;
   overflow: hidden;
 }
 #preview {
   image-rendering: pixelated;
-  box-shadow: 0 0 40px rgba(0,0,0,.55);
+  box-shadow: 0 10px 40px rgba(0,0,0,.4);
 }
 #hud {
   position: absolute; top: 8px; left: 8px; font-size: 11px;
@@ -148,7 +152,7 @@ button {
   padding: 5px 10px; cursor: pointer;
 }
 button:hover { border-color: var(--acc); }
-button.primary { background: var(--acc); border-color: var(--acc); color: #fff; }
+button.primary { background: var(--acc); border-color: var(--acc); color: #241b10; font-weight: 600; }
 button.primary:hover { filter: brightness(1.1); }
 button.mini { padding: 3px 7px; font-size: 11px; }
 button.danger { color: var(--danger); border-color: #6a3040; }
@@ -168,14 +172,14 @@ input[type="checkbox"] { accent-color: var(--acc); }
 
 /* 参数行 */
 .p-row { display: flex; align-items: center; gap: 6px; margin: 5px 0; }
-.p-row .p-name { flex: 0 0 74px; color: var(--dim); font-size: 11px; }
-.p-row input[type="range"] { flex: 1 1 auto; }
+.p-row .p-name { flex: 0 0 70px; color: var(--dim); font-size: 11px; }
+.p-row input[type="range"] { flex: 1 1 auto; min-width: 0; }
 .p-row .p-val { flex: 0 0 44px; text-align: right; font-family: Consolas, monospace; font-size: 11px; }
-.p-row .lock { cursor: pointer; color: var(--dim); padding: 0 2px; user-select: none; }
+.p-row .lock { cursor: pointer; color: var(--dim); padding: 2px; user-select: none; flex: 0 0 24px; display: grid; place-items: center; border: 0; background: transparent; }
 .p-row .lock.on { color: var(--warn); }
 .ramp-swatches { display: flex; flex-wrap: wrap; gap: 3px; flex: 1 1 auto; }
 .swatch {
-  width: 22px; height: 14px; border-radius: 3px; cursor: pointer;
+  width: 22px; height: 18px; border-radius: 3px; cursor: pointer; padding: 0;
   border: 1px solid var(--line);
 }
 .swatch.on { outline: 2px solid var(--acc); }
@@ -220,6 +224,96 @@ input[type="checkbox"] { accent-color: var(--acc); }
 ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
+/* A compact workbench: effect first, secondary preview controls disclosed. */
+::selection { background: #6b563a; color: #fff2dc; }
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+#scrub:focus-visible { outline: 2px solid var(--acc); outline-offset: 5px; }
+input, textarea { caret-color: var(--acc); }
+input::placeholder, textarea::placeholder { color: var(--dim); opacity: 1; }
+.logo { white-space: nowrap; }
+.badge { white-space: nowrap; border: 0; }
+.badge.ok { background: #2f3e2e; color: var(--ok); }
+.topbtns { margin-left: auto; }
+#preview-options { position: relative; margin: 0; background: transparent; border: 1px solid var(--line); }
+#preview-options > summary { font-size: 12px; font-weight: 400; padding: 6px 10px; white-space: nowrap; }
+.preview-options-body { position: absolute; top: calc(100% + 8px); right: 0; z-index: 20; width: 240px; padding: 16px; display: grid; gap: 14px; background: var(--bg1); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 14px 30px #0005; }
+.preview-options-body .tgl { color: var(--fg); }
+.panel-title { margin: 6px 0 10px; }
+#left .favs { margin-bottom: 8px; }
+.tl-btn { width: 34px; height: 32px; }
+#speed { height: 32px; }
+#nameplate { max-width: calc(100% - 20px); line-height: 1.6; }
+#frame-label { font-variant-numeric: tabular-nums; }
+#export-links a { overflow-wrap: anywhere; text-underline-offset: 3px; }
+#toast { max-width: calc(100vw - 32px); overflow-wrap: anywhere; }
+summary { line-height: 1.6; }
+summary .small { font-weight: 400; }
+input[type="range"] { touch-action: pan-y; }
+
+@media (max-width: 1120px) {
+  #topbar { gap: 12px; }
+  #left { width: 184px; }
+  #right { width: 296px; }
+  .badges .badge:last-child { display: none; }
+}
+@media (max-width: 900px) {
+  html, body { height: auto; min-height: 100%; }
+  body { overflow: auto; }
+  #topbar { flex-wrap: wrap; padding: 10px 14px; }
+  .badges { flex: 0 1 auto; }
+  #layout { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+  #center { grid-column: 1 / -1; grid-row: 1; height: min(70vh, 580px); min-height: 340px; }
+  #left { grid-row: 2; width: auto; overflow: visible; padding: 16px; }
+  #right { grid-row: 2; width: auto; overflow: visible; padding: 16px; border-left: 0; }
+  #grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #preview-wrap { min-height: 280px; }
+  .cell .nm { padding: 6px; }
+  button { min-height: 34px; }
+  .p-row { margin: 10px 0; }
+  .swatch { min-height: 24px; width: 24px; }
+}
+@media (max-width: 600px) {
+  #topbar { gap: 10px 8px; padding: 12px; }
+  .logo { font-size: 16px; }
+  .logo .sub { font-size: 12px; }
+  .badges { order: 3; width: 100%; gap: 8px; }
+  .badge { padding: 3px 8px; }
+  .topbtns { gap: 8px; }
+  #preview-options > summary { padding: 7px 8px; }
+  #btn-lang { min-height: 34px; }
+  #layout { display: flex; flex-direction: column; }
+  #center { flex: none; height: 420px; min-height: 320px; order: 0; }
+  #left { order: 1; border-right: 0; border-bottom: 1px solid var(--line); padding: 16px 12px; }
+  #right { order: 2; padding: 16px 12px 28px; }
+  #grid { display: grid; grid-template-columns: none; grid-template-rows: repeat(2, auto); grid-auto-flow: column; grid-auto-columns: 96px; gap: 8px; overflow-x: auto; padding: 3px 3px 12px; margin: 0 -3px; }
+  .cats { gap: 6px; margin-bottom: 12px; }
+  .cat { min-height: 34px; padding: 6px 10px; border-radius: 8px; font-size: 12px; }
+  #timeline { padding: 10px; }
+  .tl-row { flex-wrap: wrap; gap: 8px; }
+  #scrub-wrap { order: 2; flex: 1 0 70%; height: 28px; }
+  #frame-label { order: 3; min-width: 68px; }
+  .tl-btn { width: 40px; min-height: 36px; }
+  #speed { height: 36px; }
+  #nameplate { font-size: 12px; }
+  #np-desc { display: none; }
+  details .inner { padding: 6px 12px 14px; }
+  summary { padding: 12px; font-size: 14px; }
+  input[type="text"], input[type="number"], textarea, select { font-size: 14px; padding: 7px 8px; }
+  .p-row .p-name { flex-basis: 88px; font-size: 12px; }
+  .p-row .lock { min-height: 34px; }
+  .swatch { width: 28px; min-height: 28px; }
+  .row { gap: 8px; margin: 10px 0; }
+  .lbl { font-size: 12px; }
+  #preview-options .preview-options-body { right: -48px; }
+}
+@media (max-width: 380px) {
+  .logo .sub { display: none; }
+  #center { height: 380px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
 </style>
 </head>
 <body>
@@ -231,11 +325,16 @@ input[type="checkbox"] { accent-color: var(--acc); }
     <span class="badge" data-i18n="badge.timebase">60 FPS 时间基 1/60</span>
   </div>
   <div class="topbtns">
+    <details id="preview-options">
+    <summary data-i18n="top.options">预览选项</summary>
+    <div class="preview-options-body">
     <label class="tgl"><input type="checkbox" id="tgl-shake" checked> <span data-i18n="top.shake">震屏</span></label>
     <label class="tgl"><input type="checkbox" id="tgl-flash"> <span data-i18n="top.reduceFlash">抑制剧烈闪烁</span></label>
     <label class="tgl"><input type="checkbox" id="tgl-stage"> <span data-i18n="top.stage">测试场</span></label>
     <button id="btn-stage-play" class="mini" data-i18n="top.attackTest" data-i18n-title="top.attackTestTip" title="播放一次攻击：前摇→命中→后摇">▶ 攻击测试</button>
     <button id="btn-hud" class="mini">HUD</button>
+    </div>
+    </details>
     <button id="btn-lang" class="mini" data-i18n="lang.toggle" data-i18n-title="lang.toggleTip" title="切换语言 / Switch language">🌐 EN</button>
   </div>
 </header>
@@ -253,7 +352,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
   <!-- 中：预览 -->
   <section id="center">
     <div id="preview-wrap">
-      <canvas id="preview"></canvas>
+      <canvas id="preview" aria-label="PixelForge 特效预览"></canvas>
       <div id="hud" class="hidden"></div>
       <div id="nameplate"><b id="np-name">—</b><span id="np-desc" class="dim"></span></div>
     </div>
@@ -270,7 +369,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
           <option value="2">2×</option>
         </select>
         <div id="scrub-wrap">
-          <input type="range" id="scrub" min="0" max="131" value="0" step="1">
+          <input type="range" id="scrub" min="0" max="131" value="0" step="1" data-i18n-title="tl.seek" aria-label="预览帧" title="预览帧">
           <div id="scrub-fill"></div>
         </div>
         <span id="frame-label" class="mono">0 / 132</span>
@@ -283,7 +382,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
     <details id="recipe-box" open>
       <summary><span data-i18n="panel.recipe">文字配方</span> <span class="dim small" data-i18n="panel.recipeNote">（离线词典·支持范围有限）</span></summary>
       <div class="inner">
-        <textarea id="recipe-input" rows="2" data-i18n-ph="recipe.placeholder" placeholder="例：蓝紫色环形爆炸，持续2秒，细碎火花"></textarea>
+        <textarea id="recipe-input" rows="2" aria-label="文字配方" data-i18n-ph="recipe.placeholder" placeholder="例：蓝紫色环形爆炸，持续2秒，细碎火花"></textarea>
         <div class="row">
           <button id="btn-parse" class="primary" data-i18n="recipe.parse">解析并应用</button>
           <button id="btn-examples" class="mini" data-i18n="recipe.examples">示例</button>
@@ -376,7 +475,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
   </aside>
 </main>
 
-<div id="toast" class="hidden"></div>
+<div id="toast" class="hidden" role="status" aria-live="polite"></div>
 <!-- inline: src/core/pf.js -->
 <script>
 /* PixelForge 特效工厂 —— 核心命名空间与工具
@@ -3769,6 +3868,8 @@ input[type="checkbox"] { accent-color: var(--acc); }
     'badge.cpu': 'CPU 渲染',
     'badge.timebase': '60 FPS 时间基 1/60',
     'top.shake': '震屏',
+    'top.options': '预览选项',
+    'tl.seek': '预览帧',
     'top.reduceFlash': '抑制剧烈闪烁',
     'top.stage': '测试场',
     'top.attackTest': '▶ 攻击测试',
@@ -3872,6 +3973,8 @@ input[type="checkbox"] { accent-color: var(--acc); }
     'badge.cpu': 'CPU rendering',
     'badge.timebase': '60 FPS time base 1/60',
     'top.shake': 'Screen shake',
+    'top.options': 'Preview options',
+    'tl.seek': 'Preview frame',
     'top.reduceFlash': 'Tone down flashes',
     'top.stage': 'Test stage',
     'top.attackTest': '▶ Attack test',
@@ -4180,12 +4283,15 @@ input[type="checkbox"] { accent-color: var(--acc); }
     job: null,           // 导出任务 {id, worker|null, cancelFlag}
   };
   try { S.favs = JSON.parse(localStorage.getItem('pf.favs') || '[]'); } catch (e) { S.favs = []; }
+  if (!Array.isArray(S.favs)) S.favs = [];
+  S.favs = S.favs.filter(f => f && typeof f.label === 'string' && f.config && typeof f.config === 'object');
+  let previewDirty = true;
 
   const R = new PF.CpuRaster(256);
   const offCanvas = document.createElement('canvas');
-  const offCtx = offCanvas.getContext('2d');
+  const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
   const disp = $('preview');
-  const dctx = disp.getContext('2d');
+  const dctx = disp.getContext('2d', { willReadFrequently: true });
   const compBuf = { buf: null };
   const compImg = { img: null, size: 0 };   // 复用 ImageData，避免每帧分配+双重拷贝
 
@@ -4213,11 +4319,19 @@ input[type="checkbox"] { accent-color: var(--acc); }
       return false;
     }
     R.resize(S.eff.canvasSize);
+    syncConfigControls();
     offCanvas.width = offCanvas.height = S.eff.canvasSize;
     S.t = 0; S.stageT = -1;
     fitDisplay();
     renderNow();   // 立即出画面（后台节流下 rAF 可能延迟）
     return true;
+  }
+
+  function syncConfigControls() {
+    $('seed').value = S.eff.seed === undefined ? (S.config.seed || 1) : S.eff.seed;
+    $('loop-tgl').checked = !!S.config.loop;
+    $('canvas-size').value = S.eff.canvasSize;
+    $('budget').value = S.eff.budget || S.config.budget || 1000;
   }
 
   function currentDuration() { return S.eff ? S.eff.durationSec : 2; }
@@ -4228,12 +4342,15 @@ input[type="checkbox"] { accent-color: var(--acc); }
     const wrap = $('preview-wrap');
     const pad = 24;
     const w = wrap.clientWidth - pad, h = wrap.clientHeight - pad;
-    const size = Math.max(64, Math.min(w, h, 720));
+    const size = Math.max(1, Math.min(w, h, 720));
     const q = Math.max(1, Math.floor(size / S.eff.canvasSize));
     disp.width = disp.height = q * S.eff.canvasSize;
+    disp.style.width = disp.style.height = Math.min(size, disp.width) + 'px';
     dctx.imageSmoothingEnabled = false;
   }
-  window.addEventListener('resize', () => { if (S.eff) fitDisplay(); });
+  const resizePreview = () => { if (S.eff) { fitDisplay(); previewDirty = true; } };
+  window.addEventListener('resize', resizePreview);
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(resizePreview).observe($('preview-wrap'));
 
   /* ---------- 模板网格 ---------- */
   const thumbCache = {};
@@ -4261,9 +4378,11 @@ input[type="checkbox"] { accent-color: var(--acc); }
       const def = PF.TEMPLATES[id];
       if (S.cat !== 'all' && def.category !== S.cat) continue;
       n++;
-      const cell = document.createElement('div');
+      const cell = document.createElement('button');
+      cell.type = 'button';
       cell.className = 'cell' + (S.config.template === id && !S.isCombo ? ' on' : '');
-      cell.innerHTML = '<img loading="lazy" src="' + makeThumb(id) + '"><div class="nm">' + esc(I18N.tplName(def)) + (def.loop ? ' ⟳' : '') + '</div>';
+      cell.setAttribute('aria-pressed', String(S.config.template === id && !S.isCombo));
+      cell.innerHTML = '<img loading="lazy" alt="" width="72" height="72" src="' + makeThumb(id) + '"><div class="nm">' + esc(I18N.tplName(def)) + (def.loop ? ' ⟳' : '') + '</div>';
       cell.title = I18N.tplDesc(def) || I18N.tplName(def);
       cell.onclick = () => {
         pushUndo();
@@ -4279,8 +4398,10 @@ input[type="checkbox"] { accent-color: var(--acc); }
     const cats = $('cats');
     cats.innerHTML = '';
     const mk = (id, name) => {
-      const el = document.createElement('div');
+      const el = document.createElement('button');
+      el.type = 'button';
       el.className = 'cat' + (S.cat === id ? ' on' : '');
+      el.setAttribute('aria-pressed', String(S.cat === id));
       el.textContent = name;
       el.onclick = () => { S.cat = id; buildCats(); buildGrid(); };
       cats.appendChild(el);
@@ -4311,10 +4432,13 @@ input[type="checkbox"] { accent-color: var(--acc); }
       const row = document.createElement('div');
       row.className = 'p-row';
       const cur = S.config.params[s.key] !== undefined ? S.config.params[s.key] : s.default;
-      const lock = document.createElement('span');
+      const lock = document.createElement('button');
+      lock.type = 'button';
       lock.className = 'lock' + (S.locks[s.key] ? ' on' : '');
-      lock.textContent = S.locks[s.key] ? '🔒' : '🔓';
+      lock.innerHTML = '<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="12" height="8" rx="2"/><path d="' + (S.locks[s.key] ? 'M6 9V6a4 4 0 0 1 8 0v3' : 'M6 9V6a4 4 0 0 1 7-2.6') + '"/></svg>';
       lock.title = T('param.lockTip');
+      lock.setAttribute('aria-label', T('param.lockTip') + ': ' + I18N.paramLabel(s.label));
+      lock.setAttribute('aria-pressed', String(!!S.locks[s.key]));
       lock.onclick = () => { S.locks[s.key] = !S.locks[s.key]; buildParams(); };
       const name = document.createElement('span');
       name.className = 'p-name';
@@ -4325,6 +4449,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
         const min = isAngle ? 0 : s.min, max = isAngle ? 359 : s.max;
         const sl = document.createElement('input');
         sl.type = 'range'; sl.min = min; sl.max = max; sl.step = isAngle ? 1 : (s.step || 0.01); sl.value = cur;
+        sl.setAttribute('aria-label', I18N.paramLabel(s.label));
         const val = document.createElement('span');
         val.className = 'p-val';
         val.textContent = isAngle ? (cur + '°') : (+cur).toFixed(2);
@@ -4340,10 +4465,13 @@ input[type="checkbox"] { accent-color: var(--acc); }
         sw.className = 'ramp-swatches';
         const opts = s.options || Object.keys(PF.palette.R);
         for (const o of opts) {
-          const el = document.createElement('div');
+          const el = document.createElement('button');
+          el.type = 'button';
           el.className = 'swatch' + (o === cur ? ' on' : '');
           el.style.background = rampSwatch(o);
           el.title = o;
+          el.setAttribute('aria-label', I18N.paramLabel(s.label) + ': ' + o);
+          el.setAttribute('aria-pressed', String(o === cur));
           el.onclick = () => { S.config.params[s.key] = o; applyParamLive(); buildParams(); };
           sw.appendChild(el);
         }
@@ -4351,6 +4479,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
       } else if (s.type === 'bool') {
         const cb = document.createElement('input');
         cb.type = 'checkbox'; cb.checked = !!cur;
+        cb.setAttribute('aria-label', I18N.paramLabel(s.label));
         cb.onchange = () => { S.config.params[s.key] = cb.checked; applyParamLive(); };
         row.append(lock, name, cb);
       }
@@ -4362,6 +4491,8 @@ input[type="checkbox"] { accent-color: var(--acc); }
     if (S.isCombo) return;
     const eff = PF.makeEffect(S.config);
     S.eff = eff;
+    S.t = Math.min(S.t, Math.max(0, eff.durationSec - PF.DT));
+    previewDirty = true;
     if (eff.canvasSize !== R.size) { R.resize(eff.canvasSize); offCanvas.width = offCanvas.height = eff.canvasSize; fitDisplay(); }
   }
 
@@ -4398,11 +4529,11 @@ input[type="checkbox"] { accent-color: var(--acc); }
   };
 
   /* ---------- 顶栏开关 ---------- */
-  $('tgl-shake').onchange = e => { S.shake = e.target.checked; };
-  $('tgl-flash').onchange = e => { S.reduceFlash = e.target.checked; };
-  $('tgl-stage').onchange = e => { S.stageOn = e.target.checked; if (S.stageOn) S.stageT = -1; };
+  $('tgl-shake').onchange = e => { S.shake = e.target.checked; previewDirty = true; };
+  $('tgl-flash').onchange = e => { S.reduceFlash = e.target.checked; previewDirty = true; };
+  $('tgl-stage').onchange = e => { S.stageOn = e.target.checked; if (S.stageOn) S.stageT = -1; previewDirty = true; };
   $('btn-stage-play').onclick = () => { S.stageOn = true; $('tgl-stage').checked = true; S.stageT = 0; S.t = 0; };
-  $('btn-hud').onclick = () => { S.hudOn = !S.hudOn; $('hud').classList.toggle('hidden', !S.hudOn); };
+  $('btn-hud').onclick = () => { S.hudOn = !S.hudOn; $('hud').classList.toggle('hidden', !S.hudOn); previewDirty = true; };
 
   /* ---------- 文字配方 ---------- */
   /* 匹配项含义本地化：parser 输出结构化 {k, v}，由 UI 决定文案 */
@@ -4516,7 +4647,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
     S.favs.forEach((f, i) => {
       const el = document.createElement('div');
       el.className = 'fav-item';
-      el.innerHTML = '<span>' + esc(f.label) + '</span><span class="del" title="' + esc(T('fav.delTip')) + '">✕</span>';
+      el.innerHTML = '<button class="fav-load">' + esc(f.label) + '</button><button class="del" aria-label="' + esc(T('fav.delTip') + ': ' + f.label) + '" title="' + esc(T('fav.delTip')) + '">✕</button>';
       el.onclick = ev => {
         if (ev.target.classList.contains('del')) { S.favs.splice(i, 1); saveFavs(); renderFavs(); return; }
         pushUndo();
@@ -4579,6 +4710,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
   /* ---------- 预览渲染（可脱离 rAF 单独调用） ---------- */
   function renderNow() {
     if (!S.eff) return;
+    previewDirty = false;
     const t0 = performance.now();
     R.clear();
     let effT = S.t;
@@ -4633,6 +4765,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
     requestAnimationFrame(loop);
     const dt = Math.min(0.1, (ts - lastTs) / 1000 || 0);
     lastTs = ts;
+    if (document.hidden) return;
     /* FPS 统计 */
     S.frames++; S.fpsT += dt;
     if (S.fpsT >= 0.5) { S.fps = Math.round(S.frames / S.fpsT); S.frames = 0; S.fpsT = 0; }
@@ -4642,15 +4775,19 @@ input[type="checkbox"] { accent-color: var(--acc); }
       const D = currentDuration();
       if (S.t >= D) S.t %= D;      // 预览始终循环（含一次性效果），便于调参
     }
-    if (S.stageOn && S.stageT >= 0) {
+    const advancingStage = S.stageOn && S.stageT >= 0;
+    if (advancingStage) {
       S.stageT += dt * S.speed;
       if (S.stageT > STAGE.WINDUP + STAGE.RECOVER + 0.6) S.stageT = -1;
     }
-    renderNow();
+    if (S.playing || advancingStage || previewDirty) renderNow();
   }
 
   /* ---------- 导出 ---------- */
   function ensureWorker() {
+    // file:// and standalone builds cannot load this relative worker reliably.
+    // Use the existing CPU chunked exporter rather than fail asynchronously.
+    if (location.protocol === 'file:') return null;
     try {
       const w = new Worker('src/export.worker.js');
       return w;
@@ -4672,6 +4809,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
   };
   function finishExport(res, fallbackName) {
     const box = $('export-links');
+    box.querySelectorAll('a').forEach(a => URL.revokeObjectURL(a.href));
     box.innerHTML = '';
     if (!res || res.cancelled) { toast(T('toast.exportCancelled')); hideProgress(); S.job = null; return; }
     for (const e of res.entries) {
@@ -4746,7 +4884,7 @@ input[type="checkbox"] { accent-color: var(--acc); }
 
   /* ---------- 键盘 ---------- */
   window.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+    if (e.target.closest('input, textarea, select, button, summary') || e.target.isContentEditable) return;
     if (e.code === 'Space') { e.preventDefault(); $('btn-play').click(); }
     else if (e.code === 'ArrowLeft') $('btn-prev').click();
     else if (e.code === 'ArrowRight') $('btn-next').click();
@@ -4755,6 +4893,15 @@ input[type="checkbox"] { accent-color: var(--acc); }
 
   /* ---------- 语言切换 ---------- */
   $('btn-lang').onclick = () => I18N.toggle();
+  document.addEventListener('click', e => {
+    if (!$('preview-options').contains(e.target)) $('preview-options').open = false;
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && $('preview-options').open) {
+      $('preview-options').open = false;
+      $('preview-options').querySelector('summary').focus();
+    }
+  });
   I18N.onChange(() => {
     /* 静态文案由 I18N.apply 刷新；动态区域按当前语言重建 */
     buildCats();

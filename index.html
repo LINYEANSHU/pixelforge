@@ -15,11 +15,16 @@
     <span class="badge" data-i18n="badge.timebase">60 FPS 时间基 1/60</span>
   </div>
   <div class="topbtns">
+    <details id="preview-options">
+    <summary data-i18n="top.options">预览选项</summary>
+    <div class="preview-options-body">
     <label class="tgl"><input type="checkbox" id="tgl-shake" checked> <span data-i18n="top.shake">震屏</span></label>
     <label class="tgl"><input type="checkbox" id="tgl-flash"> <span data-i18n="top.reduceFlash">抑制剧烈闪烁</span></label>
     <label class="tgl"><input type="checkbox" id="tgl-stage"> <span data-i18n="top.stage">测试场</span></label>
     <button id="btn-stage-play" class="mini" data-i18n="top.attackTest" data-i18n-title="top.attackTestTip" title="播放一次攻击：前摇→命中→后摇">▶ 攻击测试</button>
     <button id="btn-hud" class="mini">HUD</button>
+    </div>
+    </details>
     <button id="btn-lang" class="mini" data-i18n="lang.toggle" data-i18n-title="lang.toggleTip" title="切换语言 / Switch language">🌐 EN</button>
   </div>
 </header>
@@ -37,7 +42,7 @@
   <!-- 中：预览 -->
   <section id="center">
     <div id="preview-wrap">
-      <canvas id="preview"></canvas>
+      <canvas id="preview" aria-label="PixelForge 特效预览"></canvas>
       <div id="hud" class="hidden"></div>
       <div id="nameplate"><b id="np-name">—</b><span id="np-desc" class="dim"></span></div>
     </div>
@@ -54,7 +59,7 @@
           <option value="2">2×</option>
         </select>
         <div id="scrub-wrap">
-          <input type="range" id="scrub" min="0" max="131" value="0" step="1">
+          <input type="range" id="scrub" min="0" max="131" value="0" step="1" data-i18n-title="tl.seek" aria-label="预览帧" title="预览帧">
           <div id="scrub-fill"></div>
         </div>
         <span id="frame-label" class="mono">0 / 132</span>
@@ -67,7 +72,7 @@
     <details id="recipe-box" open>
       <summary><span data-i18n="panel.recipe">文字配方</span> <span class="dim small" data-i18n="panel.recipeNote">（离线词典·支持范围有限）</span></summary>
       <div class="inner">
-        <textarea id="recipe-input" rows="2" data-i18n-ph="recipe.placeholder" placeholder="例：蓝紫色环形爆炸，持续2秒，细碎火花"></textarea>
+        <textarea id="recipe-input" rows="2" aria-label="文字配方" data-i18n-ph="recipe.placeholder" placeholder="例：蓝紫色环形爆炸，持续2秒，细碎火花"></textarea>
         <div class="row">
           <button id="btn-parse" class="primary" data-i18n="recipe.parse">解析并应用</button>
           <button id="btn-examples" class="mini" data-i18n="recipe.examples">示例</button>
@@ -160,7 +165,7 @@
   </aside>
 </main>
 
-<div id="toast" class="hidden"></div>
+<div id="toast" class="hidden" role="status" aria-live="polite"></div>
 <script src="src/core/pf.js"></script>
 <script src="src/core/rng.js"></script>
 <script src="src/core/palette.js"></script>

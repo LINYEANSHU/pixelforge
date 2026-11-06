@@ -62,8 +62,23 @@ server.listen(PORT, '127.0.0.1', () => {
   const url = 'http://127.0.0.1:' + PORT;
   console.log('[PixelForge] 本地预览已启动: ' + url);
   console.log('[PixelForge] 离线运行，无任何网络依赖。Ctrl+C 停止。');
+  if (process.argv.includes('--no-open')) return;
   try {
-    if (process.platform === 'win32') spawn('cmd', ['/c', 'start', '', url], { detached: true, stdio: 'ignore' }).unref();
+    if (process.platform === 'win32') {
+      const candidates = [
+        path.join(process.env['ProgramFiles(x86)'] || '', 'Microsoft/Edge/Application/msedge.exe'),
+        path.join(process.env.ProgramFiles || '', 'Microsoft/Edge/Application/msedge.exe'),
+        path.join(process.env.ProgramFiles || '', 'Google/Chrome/Application/chrome.exe'),
+      ];
+      const browser = candidates.find(p => fs.existsSync(p));
+      if (!browser) { console.log('[PixelForge] 未找到 Edge/Chrome。请使用关闭 GPU 加速的浏览器访问上方地址。'); return; }
+      const profile = path.join(process.env.LOCALAPPDATA || ROOT, 'PixelForge', 'cpu-profile');
+      const child = spawn(browser, ['--app=' + url, '--user-data-dir=' + profile,
+        '--disable-gpu', '--disable-gpu-compositing', '--disable-webgl', '--no-first-run'],
+        { detached: true, stdio: 'ignore', windowsHide: true });
+      child.on('error', () => console.log('[PixelForge] 浏览器未能自动启动，请手动访问上方地址。'));
+      child.unref();
+    }
     else if (process.platform === 'darwin') spawn('open', [url], { detached: true, stdio: 'ignore' }).unref();
     else spawn('xdg-open', [url], { detached: true, stdio: 'ignore' }).unref();
   } catch (e) { /* 打不开浏览器无妨，手动访问即可 */ }
