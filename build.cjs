@@ -1,7 +1,7 @@
 /* PixelForge —— 单文件打包脚本
  * 将 index.html + styles.css + 全部脚本合并为 dist/pixelforge-standalone.html
  * （无 Worker 环境 → 导出走主线程分片回退路径，功能一致）
- * 用法: node build.mjs
+ * 用法: node build.cjs
  */
 'use strict';
 const fs = require('fs');
@@ -19,8 +19,8 @@ const SCRIPTS = [
 const css = fs.readFileSync(path.join(ROOT, 'styles.css'), 'utf8');
 let html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 
-const scripts = SCRIPTS.map(rel => {
-  const code = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+const scripts = '<script>globalThis.PF_STANDALONE = true;</script>\n' + SCRIPTS.map(rel => {
+  const code = fs.readFileSync(path.join(ROOT, rel), 'utf8').replace(/<\/script/gi, '<\\/script');
   return '<!-- inline: ' + rel + ' -->\n<script>\n' + code + '\n</script>';
 }).join('\n');
 

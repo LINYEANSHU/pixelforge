@@ -349,7 +349,7 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 
   /* ---------- 种子/循环/画布/预算 ---------- */
-  $('seed').onchange = e => { S.config.seed = +e.target.value | 0; if (buildEffect()) updateNameplate(); };
+  $('seed').onchange = e => { pushUndo(); S.config.seed = +e.target.value | 0; if (buildEffect()) updateNameplate(); };
   $('btn-dice').onclick = () => { pushUndo(); S.config.seed = PF.rng.randomSeed(); $('seed').value = S.config.seed; if (buildEffect()) updateNameplate(); };
   $('loop-tgl').onchange = e => {
     pushUndo();
@@ -357,8 +357,8 @@
     if (!S.isCombo) S.config.template && (S.config.params.durationSec = S.config.params.durationSec);
     if (buildEffect()) updateNameplate();
   };
-  $('canvas-size').onchange = e => { S.config.canvasSize = +e.target.value; if (buildEffect()) { buildParams(); updateNameplate(); } };
-  $('budget').onchange = e => { S.config.budget = +e.target.value | 0; if (buildEffect()) updateNameplate(); };
+  $('canvas-size').onchange = e => { pushUndo(); S.config.canvasSize = +e.target.value; if (buildEffect()) { buildParams(); updateNameplate(); } };
+  $('budget').onchange = e => { pushUndo(); S.config.budget = +e.target.value | 0; if (buildEffect()) updateNameplate(); };
 
   /* ---------- 变体 / 撤销 / 收藏 ---------- */
   $('btn-variant').onclick = () => {
@@ -437,7 +437,6 @@
     }
   }
   $('btn-combo-apply').onclick = () => {
-    pushUndo();
     const items = [];
     for (const it of comboState.items) {
       if (!it.on) continue;
@@ -448,10 +447,12 @@
       });
     }
     if (!items.length) { toast(T('toast.needLayer'), true); return; }
+    pushUndo();
     S.config = { items, budget: +$('budget').value || 1000, canvasSize: +$('canvas-size').value };
     if (buildEffect()) { buildParams(); updateNameplate(); toast(fmt('toast.comboApplied', items.length)); }
   };
   $('btn-combo-clear').onclick = () => {
+    pushUndo();
     const ids = Object.keys(PF.TEMPLATES);
     S.config = { template: ids[0], params: {}, seed: 1, loop: PF.TEMPLATES[ids[0]].loop, budget: +$('budget').value || 1000, canvasSize: +$('canvas-size').value };
     buildEffect(); buildParams(); buildGrid(); updateNameplate();
@@ -537,7 +538,7 @@
   function ensureWorker() {
     // file:// and standalone builds cannot load this relative worker reliably.
     // Use the existing CPU chunked exporter rather than fail asynchronously.
-    if (location.protocol === 'file:') return null;
+    if (globalThis.PF_STANDALONE || location.protocol === 'file:') return null;
     try {
       const w = new Worker('src/export.worker.js');
       return w;

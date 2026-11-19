@@ -27,22 +27,9 @@
       const nameBytes = new TextEncoder().encode(name);
       const now = dosTime(new Date());
       const crc = crc32(data, 0, data.length);
-      const local = new Uint8Array(30 + nameBytes.length);
-      local.set(u32(0x04034b50), 0);
-      local.set(u16(20), 4);            // version
-      local.set(u16(0x0800), 6);        // UTF-8 flag
-      local.set(u16(0), 8);             // store
-      local.set(u16(now.time), 10);
-      local.set(u16(now.date), 12);
-      local.set(u32(crc), 14);
-      local.set(u32(data.length), 18);
-      local.set(u32(data.length), 22);
-      local.set(u16(nameBytes.length), 26);
-      local.set(u16(0), 28);
-      local.set(nameBytes, 30);
       this.entries.push({ name: nameBytes, crc, size: data.length, offset: this.offset, time: now.time, date: now.date });
       this.central.push(data);          // 数据稍后统一拼接（仅压缩后字节）
-      this.offset += local.length + data.length;
+      this.offset += 30 + nameBytes.length + data.length;
       return this;
     }
     finish() {
@@ -50,7 +37,8 @@
       const centralSize = 46 * n + this.entries.reduce((a, e) => a + e.name.length, 0);
       const out = new Uint8Array(this.offset + centralSize + 22);
       let o = 0;
-      for (const e of this.entries) {
+      for (let idx = 0; idx < n; idx++) {
+        const e = this.entries[idx];
         const local = new Uint8Array(30 + e.name.length);
         local.set(u32(0x04034b50), 0);
         local.set(u16(20), 4);
@@ -65,7 +53,7 @@
         local.set(u16(0), 28);
         local.set(e.name, 30);
         out.set(local, o); o += local.length;
-        out.set(this.central.shift(), o); o += e.size;
+        out.set(this.central[idx], o); o += e.size;
       }
       const cdStart = o;
       for (const e of this.entries) {
