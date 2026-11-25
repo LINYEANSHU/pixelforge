@@ -9,18 +9,24 @@ Make pixel effects offline: choose a template, tune a recipe, and preview or exp
 [![CI](https://github.com/LINYEANSHU/pixelforge/actions/workflows/ci.yml/badge.svg)](https://github.com/LINYEANSHU/pixelforge/actions/workflows/ci.yml)
 [![MIT](https://img.shields.io/badge/license-MIT-54775a.svg)](LICENSE)
 
-## In the app
+## Windows desktop app
 
-<img src="assets/readme/current-desktop.png" width="100%" alt="PixelForge · Pixel effects workshop — desktop interface">
+**[Download for Windows x64 (portable ZIP)](https://github.com/LINYEANSHU/pixelforge/releases/download/windows-v1.0.0/pixelforge-windows-x64.zip)**
+
+Extract the entire ZIP, then double-click `PixelForge.exe` inside the app folder. Choose a template, pause and scrub the timeline, then export a transparent PNG frame.
+
+<img src="assets/readme/windows-desktop.webp" width="100%" alt="PixelForge for Windows showing the template library, a fire-burst preview, and export controls">
 
 <details>
-<summary>Show the mobile layout</summary>
+<summary>Show the desktop and mobile browser layouts</summary>
 
-<img src="assets/readme/current-mobile.png" width="390" alt="PixelForge · Pixel effects workshop — mobile interface">
+<img src="assets/readme/current-desktop.png" width="100%" alt="PixelForge editor in a desktop browser">
+
+<img src="assets/readme/current-mobile.png" width="390" alt="PixelForge editor in a mobile browser">
 
 </details>
 
-## Start
+## Run in your browser
 
 Use Node.js 18+; no dependency installation is needed:
 
@@ -60,6 +66,8 @@ node build.cjs
 ```
 
 The 18-test suite covers determinism, preview/export pixel agreement, alpha, paging, recipe round trips, cancellation and long loops. The build command regenerates the standalone file. Recent UI checks include phone previews, field synchronization and a real PNG download; machine-specific frame rates are not universal performance claims.
+
+To package the desktop app, run [`node desktop/build.cjs`](desktop/build.cjs) from the repository root on Windows x64 with Node.js 24. Output goes to `desktop/dist/`.
 
 Rendering cost depends on dimensions, particle budget and frame count. The experimental WebGL backend is not connected to the main UI and was not benchmarked in this update. GIF and video export are not implemented.
 

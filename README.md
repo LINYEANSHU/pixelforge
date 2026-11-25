@@ -9,18 +9,24 @@
 [![CI](https://github.com/LINYEANSHU/pixelforge/actions/workflows/ci.yml/badge.svg)](https://github.com/LINYEANSHU/pixelforge/actions/workflows/ci.yml)
 [![MIT](https://img.shields.io/badge/license-MIT-54775a.svg)](LICENSE)
 
-## 实际界面
+## Windows 桌面版
 
-<img src="assets/readme/current-desktop.png" width="100%" alt="PixelForge · 像素特效工厂 — desktop interface">
+**[下载 Windows x64 便携版（ZIP）](https://github.com/LINYEANSHU/pixelforge/releases/download/windows-v1.0.0/pixelforge-windows-x64.zip)**
+
+完整解压 ZIP，再双击应用文件夹中的 `PixelForge.exe`。打开后选择一个模板，暂停并拖动时间轴，点击「单帧 PNG」导出透明素材。
+
+<img src="assets/readme/windows-desktop.webp" width="100%" alt="PixelForge Windows 桌面版的模板库、烈焰爆裂预览和导出面板">
 
 <details>
-<summary>展开手机界面</summary>
+<summary>展开浏览器的桌面和手机界面</summary>
 
-<img src="assets/readme/current-mobile.png" width="390" alt="PixelForge · 像素特效工厂 — mobile interface">
+<img src="assets/readme/current-desktop.png" width="100%" alt="PixelForge 浏览器版的桌面编辑界面">
+
+<img src="assets/readme/current-mobile.png" width="390" alt="PixelForge 浏览器版的手机编辑界面">
 
 </details>
 
-## 快速开始
+## 浏览器版
 
 需要 Node.js 18+，无需安装依赖：
 
@@ -60,6 +66,8 @@ node build.cjs
 ```
 
 现有套件 18 项通过，覆盖确定性、预览/导出像素一致、透明通道、分页、配方往返、取消和长循环。`build.cjs` 重建单文件版本。最近交互验证包含手机预览、字段同步及实际 PNG 下载；没有把特定机器帧率当作通用性能承诺。
+
+在 Windows x64 上使用 Node.js 24，从仓库根目录运行 [`node desktop/build.cjs`](desktop/build.cjs) 可重新打包桌面版，产物位于 `desktop/dist/`。
 
 预览与导出耗时取决于画布、粒子预算和帧数。实验性 WebGL 后端未接入主 UI；本轮未运行 GPU 基准。GIF 和视频导出尚未实现。
 

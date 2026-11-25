@@ -1,0 +1,11 @@
+{
+  "id": "pixelforge",
+  "name": "PixelForge 特效工厂",
+  "exe": "PixelForge",
+  "static": [
+    "index.html",
+    "styles.css",
+    "src"
+  ],
+  "background": "#181c18"
+}
