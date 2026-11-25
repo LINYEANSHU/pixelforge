@@ -12,6 +12,16 @@
   const HX = -0.55;             // 攻击者 x
   const WINDUP = 0.42;          // 前摇时长
   const RECOVER = 1.0;          // 后摇时长
+  const SINGLE = Object.freeze([0]);
+  const DOUBLE = Object.freeze([0, 0.95]);
+
+  function attackStarts(mode) {
+    return mode === 'double' ? DOUBLE : SINGLE;
+  }
+
+  function attackIndex(mode, time) {
+    return mode === 'double' && time >= DOUBLE[1] ? 1 : 0;
+  }
 
   /* 一段攻击的时间轴状态：t 相对触发时刻 */
   function phase(t) {
@@ -76,7 +86,7 @@
     }
   }
 
-  const STAGE = { draw, phase, GROUND, DX, HX, WINDUP, RECOVER };
+  const STAGE = { draw, phase, attackStarts, attackIndex, GROUND, DX, HX, WINDUP, RECOVER };
   if (typeof globalThis !== 'undefined') {
     globalThis.PF_STAGE = STAGE;
     if (globalThis.PF) globalThis.PF.stage = STAGE;

@@ -7,6 +7,7 @@
   const PF = globalThis.PF;
   const $ = id => document.getElementById(id);
   const PARSER = globalThis.PF_PARSER, STAGE = globalThis.PF_STAGE;
+  const PROJECT = globalThis.PF_PROJECT;
   const I18N = globalThis.PF_I18N;
   const T = k => I18N.t(k);
   const fmt = (...a) => I18N.fmt.apply(I18N, a);
@@ -24,6 +25,7 @@
     favs: [],
     cat: 'all',
     stageOn: false,
+    stageMode: 'single',
     stageT: -1,          // -1 = 未触发
     reduceFlash: false,
     shake: true,
@@ -42,8 +44,9 @@
   const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
   const disp = $('preview');
   const dctx = disp.getContext('2d', { willReadFrequently: true });
-  const compBuf = { buf: null };
-  const compImg = { img: null, size: 0 };   // 复用 ImageData，避免每帧分配+双重拷贝
+  let compositeImage = offCtx.createImageData(R.size, R.size);
+  const shakeOffset = [0, 0];
+  const renderOptions = {};
 
   function toast(msg, err) {
     const el = $('toast');
@@ -55,23 +58,19 @@
   }
 
   /* ---------- 效果构建 ---------- */
-  function buildEffect() {
+  function buildEffect(effect = null, frame = 0) {
     try {
-      if (S.config.items) {
-        S.eff = PF.makeCombo(S.config);
-        S.isCombo = true;
-      } else {
-        S.eff = PF.makeEffect(S.config);
-        S.isCombo = false;
-      }
+      S.eff = effect || (S.config.items ? PF.makeCombo(S.config) : PF.makeEffect(S.config));
+      S.isCombo = S.eff.kind === 'combo';
     } catch (e) {
       toast(T('toast.buildFail') + e.message, true);
       return false;
     }
     R.resize(S.eff.canvasSize);
     syncConfigControls();
-    offCanvas.width = offCanvas.height = S.eff.canvasSize;
-    S.t = 0; S.stageT = -1;
+    if (offCanvas.width !== R.size || offCanvas.height !== R.size) offCanvas.width = offCanvas.height = R.size;
+    S.t = frame / PF.FPS;
+    S.stageT = -1;
     fitDisplay();
     renderNow();   // 立即出画面（后台节流下 rAF 可能延迟）
     return true;
@@ -94,7 +93,8 @@
     const w = wrap.clientWidth - pad, h = wrap.clientHeight - pad;
     const size = Math.max(1, Math.min(w, h, 720));
     const q = Math.max(1, Math.floor(size / S.eff.canvasSize));
-    disp.width = disp.height = q * S.eff.canvasSize;
+    const pixels = q * S.eff.canvasSize;
+    if (disp.width !== pixels || disp.height !== pixels) disp.width = disp.height = pixels;
     disp.style.width = disp.style.height = Math.min(size, disp.width) + 'px';
     dctx.imageSmoothingEnabled = false;
   }
@@ -250,10 +250,11 @@
   function setScrub() {
     const n = frameCount();
     const sc = $('scrub');
-    sc.max = n - 1;
-    const f = Math.round(S.t * 60) % n;
-    sc.value = f;
-    $('frame-label').textContent = f + ' / ' + n;
+    if (+sc.max !== n - 1) sc.max = n - 1;
+    const f = Math.round(S.t * PF.FPS) % n;
+    if (+sc.value !== f) sc.value = f;
+    const label = f + ' / ' + n;
+    if ($('frame-label').textContent !== label) $('frame-label').textContent = label;
   }
   $('btn-play').onclick = () => {
     S.playing = !S.playing;
@@ -282,7 +283,14 @@
   $('tgl-shake').onchange = e => { S.shake = e.target.checked; previewDirty = true; };
   $('tgl-flash').onchange = e => { S.reduceFlash = e.target.checked; previewDirty = true; };
   $('tgl-stage').onchange = e => { S.stageOn = e.target.checked; if (S.stageOn) S.stageT = -1; previewDirty = true; };
-  $('btn-stage-play').onclick = () => { S.stageOn = true; $('tgl-stage').checked = true; S.stageT = 0; S.t = 0; };
+  $('stage-mode').onchange = e => { S.stageMode = e.target.value; S.stageT = -1; previewDirty = true; };
+  $('btn-stage-play').onclick = () => {
+    S.stageOn = true;
+    $('tgl-stage').checked = true;
+    S.stageT = 0;
+    S.t = 0;
+    renderNow();
+  };
   $('btn-hud').onclick = () => { S.hudOn = !S.hudOn; $('hud').classList.toggle('hidden', !S.hudOn); previewDirty = true; };
 
   /* ---------- 文字配方 ---------- */
@@ -458,42 +466,101 @@
     buildEffect(); buildParams(); buildGrid(); updateNameplate();
   };
 
+  /* ---------- 本地项目存档 ---------- */
+  $('btn-project-save').onclick = () => {
+    if (!S.eff) return;
+    const config = { ...S.config, canvasSize: S.eff.canvasSize,
+      budget: PF.clamp(S.config.budget || PF.DEFAULT_BUDGET, 64, 4000) };
+    const preview = {
+      frame: Math.round(S.t * PF.FPS) % frameCount(),
+      playing: S.playing, speed: S.speed, stageOn: S.stageOn, stageMode: S.stageMode,
+      shake: S.shake, reduceFlash: S.reduceFlash, hud: S.hudOn,
+    };
+    const editor = {
+      note: $('recipe-input').value, category: S.cat, locks: S.locks,
+      slots: comboState.items, variant: $('variant-style').value,
+    };
+    try {
+      localStorage.setItem(PROJECT.key, PROJECT.encode({ config, preview, editor }));
+      toast(T('project.saved'));
+    } catch {
+      toast(T('project.saveFailed'), true);
+    }
+  };
+
+  $('btn-project-restore').onclick = () => {
+    try {
+      const text = localStorage.getItem(PROJECT.key);
+      if (text === null) { toast(T('project.empty')); return; }
+      const { config, effect, preview, editor } = PROJECT.decode(text);
+      pushUndo();
+      Object.assign(S, {
+        config, cat: editor.category, locks: editor.locks,
+        playing: preview.playing, speed: preview.speed, stageOn: preview.stageOn,
+        stageMode: preview.stageMode, shake: preview.shake,
+        reduceFlash: preview.reduceFlash, hudOn: preview.hud,
+      });
+      comboState.items = editor.slots;
+      $('recipe-input').value = editor.note;
+      $('parse-result').replaceChildren();
+      $('variant-style').value = editor.variant;
+      $('speed').value = preview.speed;
+      $('btn-play').textContent = S.playing ? '⏸' : '▶';
+      $('tgl-stage').checked = S.stageOn;
+      $('stage-mode').value = S.stageMode;
+      $('tgl-shake').checked = S.shake;
+      $('tgl-flash').checked = S.reduceFlash;
+      $('hud').classList.toggle('hidden', !S.hudOn);
+      buildEffect(effect, preview.frame);
+      buildCats(); buildGrid(); buildParams(); buildComboUI(); updateNameplate();
+      toast(T('project.restored'));
+    } catch {
+      toast(T('project.restoreFailed'), true);
+    }
+  };
+
   /* ---------- 预览渲染（可脱离 rAF 单独调用） ---------- */
   function renderNow() {
     if (!S.eff) return;
     previewDirty = false;
     const t0 = performance.now();
     R.clear();
-    let effT = S.t;
-    let skipEff = false;
-    if (S.stageOn && S.stageT >= 0) {
-      STAGE.draw(R, S.stageT, {});
-      if (S.stageT < STAGE.WINDUP) {
-        skipEff = true;                               // 前摇阶段：效果未触发
-      } else {
-        effT = S.stageT - STAGE.WINDUP;               // 命中瞬间效果归零
+    let shakeTime = S.t;
+    const progress = $('stage-progress');
+    const attackActive = S.stageOn && S.stageT >= 0;
+    progress.hidden = !attackActive;
+    if (attackActive) {
+      const starts = STAGE.attackStarts(S.stageMode);
+      const index = STAGE.attackIndex(S.stageMode, S.stageT);
+      STAGE.draw(R, S.stageT - starts[index], renderOptions);
+      shakeTime = -1;
+      for (const start of starts) {
+        const effectTime = S.stageT - start - STAGE.WINDUP;
+        if (effectTime < 0 || effectTime >= currentDuration()) continue;
+        S.eff.renderLocal(effectTime, R, renderOptions);
+        shakeTime = effectTime;
       }
+      const status = fmt('top.strikeProgress', index + 1, starts.length);
+      if (progress.textContent !== status) progress.textContent = status;
+      progress.dataset.strike = index + 1;
+    } else {
+      if (S.stageOn) STAGE.draw(R, -1, renderOptions);
+      S.eff.renderLocal(S.t, R, renderOptions);
     }
-    if (!skipEff) S.eff.renderLocal(effT, R, {});
     const t1 = performance.now();
-    const out = compBuf.buf = R.composite(compBuf.buf, S.reduceFlash);
-    /* putImageData → 离屏 → 最近邻放大到显示画布
-     * ImageData 复用（旧实现每帧 new Uint8ClampedArray(out) + new ImageData = 两次 256KB 拷贝） */
-    if (!compImg.img || compImg.size !== R.size) {
-      compImg.img = offCtx.createImageData(R.size, R.size);
-      compImg.size = R.size;
+    if (compositeImage.width !== R.size) {
+      compositeImage = offCtx.createImageData(R.size, R.size);
     }
-    compImg.img.data.set(out);
-    offCtx.putImageData(compImg.img, 0, 0);
+    R.composite(compositeImage.data, S.reduceFlash);
+    offCtx.putImageData(compositeImage, 0, 0);
     /* 震屏 */
-    const shk = [0, 0];
-    S.eff.shakeOffset(effT, shk);
+    S.eff.shakeOffset(shakeTime, shakeOffset);
     const q = disp.width / R.size;
     dctx.fillStyle = '#0a0c10';
     dctx.fillRect(0, 0, disp.width, disp.height);
     dctx.save();
-    if (S.shake && (shk[0] || shk[1])) {
-      dctx.translate(shk[0] * q, shk[1] * q);
+    if (S.shake && (shakeOffset[0] || shakeOffset[1])) {
+      dctx.translate(shakeOffset[0] * q, shakeOffset[1] * q);
     }
     dctx.drawImage(offCanvas, 0, 0, disp.width, disp.height);
     dctx.restore();
@@ -529,7 +596,9 @@
     const advancingStage = S.stageOn && S.stageT >= 0;
     if (advancingStage) {
       S.stageT += dt * S.speed;
-      if (S.stageT > STAGE.WINDUP + STAGE.RECOVER + 0.6) S.stageT = -1;
+      const starts = STAGE.attackStarts(S.stageMode);
+      const end = starts[starts.length - 1] + STAGE.WINDUP + Math.max(STAGE.RECOVER + 0.6, currentDuration());
+      if (S.stageT > end) S.stageT = -1;
     }
     if (S.playing || advancingStage || previewDirty) renderNow();
   }

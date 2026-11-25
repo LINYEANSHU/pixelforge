@@ -13,7 +13,7 @@ const SCRIPTS = [
   'src/core/layers.js', 'src/core/effect.js', 'src/core/templates.js',
   'src/core/parser.js', 'src/core/variant.js', 'src/core/stage.js',
   'src/core/export/png.js', 'src/core/export/zip.js', 'src/core/export/job.js',
-  'src/ui/i18n.js', 'src/ui/app.js',
+  'src/ui/i18n.js', 'src/ui/project.js', 'src/ui/app.js',
 ];
 
 const css = fs.readFileSync(path.join(ROOT, 'styles.css'), 'utf8');

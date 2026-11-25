@@ -21,7 +21,15 @@
     <label class="tgl"><input type="checkbox" id="tgl-shake" checked> <span data-i18n="top.shake">震屏</span></label>
     <label class="tgl"><input type="checkbox" id="tgl-flash"> <span data-i18n="top.reduceFlash">抑制剧烈闪烁</span></label>
     <label class="tgl"><input type="checkbox" id="tgl-stage"> <span data-i18n="top.stage">测试场</span></label>
+    <label class="tgl" for="stage-mode">
+      <span data-i18n="top.attackPattern">攻击模式</span>
+      <select id="stage-mode">
+        <option value="single" data-i18n="top.singleStrike">单次攻击</option>
+        <option value="double" data-i18n="top.doubleStrike">二连击</option>
+      </select>
+    </label>
     <button id="btn-stage-play" class="mini" data-i18n="top.attackTest" data-i18n-title="top.attackTestTip" title="播放一次攻击：前摇→命中→后摇">▶ 攻击测试</button>
+    <span id="stage-progress" class="dim small" hidden></span>
     <button id="btn-hud" class="mini">HUD</button>
     </div>
     </details>
@@ -37,6 +45,11 @@
     <div id="grid" class="grid"></div>
     <div class="panel-title" data-i18n="panel.favs">收藏</div>
     <div id="favs" class="favs"><div class="dim small" data-i18n="favs.hint">在参数面板点 ☆ 收藏当前配方</div></div>
+    <div class="panel-title" data-i18n="project.title">项目存档</div>
+    <div class="row">
+      <button id="btn-project-save" class="mini" data-i18n="project.save">保存项目</button>
+      <button id="btn-project-restore" class="mini" data-i18n="project.restore">恢复存档</button>
+    </div>
   </aside>
 
   <!-- 中：预览 -->
@@ -180,6 +193,7 @@
 <script src="src/core/export/zip.js"></script>
 <script src="src/core/export/job.js"></script>
 <script src="src/ui/i18n.js"></script>
+<script src="src/ui/project.js"></script>
 <script src="src/ui/app.js"></script>
 </body>
 </html>

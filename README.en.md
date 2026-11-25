@@ -44,6 +44,8 @@ First result: select a template → tune intensity, duration or palette → paus
 - **Three ways to edit**: parameters, randomized variants that respect locks, and bilingual text recipes. Text recipes use an offline dictionary and rules for supported descriptions, with no online model.
 - **A reproducible timeline**: seed and frame determine the result. Preview, seeking and export share the same evaluation path, sampled at `t = k/60`.
 - **Up to four layers**: independent time windows, offsets and scale; favorites, undo and recipe import/export.
+- **Local project save**: restore the recipe, editor drafts, parameter locks and preview frame.
+- **Attack test**: select a single or double strike in Preview Options to see how effects overlap across hits.
 - **A usable phone layout**: preview, templates and parameters stack vertically. Paused frames redraw only after changes; displayed fields stay in sync with templates and undo.
 
 ## Export
@@ -62,6 +64,7 @@ Export reports progress and supports cancellation. HTTP mode uses a Worker; `fil
 
 ```sh
 node tests/run-tests.cjs
+node --test tests/project.test.cjs
 node build.cjs
 ```
 
