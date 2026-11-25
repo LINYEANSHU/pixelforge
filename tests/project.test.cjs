@@ -18,6 +18,18 @@ test('project checkpoint keeps the recipe, editor draft and paused frame', () =>
   assert.deepEqual(decoded.editor, editor);
 });
 
+test('project checkpoint preserves a looping combo and defaults old combo recipes to one shot', () => {
+  const combo = {
+    canvasSize: 128, budget: 450, loop: true,
+    items: [{ config, start: 0, dur: 2, off: [0, 0], scale: 1 }],
+  };
+  const text = projects.encode({ config: combo, preview, editor });
+  assert.equal(projects.decode(text).effect.loop, true);
+  const legacy = JSON.parse(text);
+  delete legacy.recipe.loop;
+  assert.equal(projects.decode(JSON.stringify(legacy)).effect.loop, false);
+});
+
 test('project checkpoint rejects an invalid timeline or an unknown template', () => {
   const text = projects.encode({ config, preview, editor });
   const bad = JSON.parse(text);

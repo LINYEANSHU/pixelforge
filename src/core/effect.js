@@ -150,6 +150,7 @@
         app: PF.APP_NAME + ' ' + PF.VERSION,
         combo: true,
         items: c.items,
+        loop: !!c.loop,
         budget: c.budget || PF.DEFAULT_BUDGET,
         canvasSize: c.canvasSize || PF.DEFAULT_CANVAS,
         note: note || '',
@@ -175,6 +176,7 @@
     if (json.format !== 'pixelforge.recipe') errors.push('format 必须是 pixelforge.recipe');
     if (json.version !== 1) errors.push('不支持的配方版本: ' + json.version);
     if (json.combo) {
+      if (json.loop !== undefined && typeof json.loop !== 'boolean') errors.push('loop 必须是布尔值');
       if (!Array.isArray(json.items) || json.items.length < 1 || json.items.length > 4) {
         return { ok: false, errors: errors.concat(['组合 items 需要 1..4 个元素']) };
       }
@@ -189,6 +191,7 @@
         ok: true,
         config: {
           items: json.items,
+          loop: json.loop === true,
           budget: json.budget,
           canvasSize: json.canvasSize,
         },
