@@ -1,4 +1,6 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs/promises');
+const path = require('node:path');
 
 module.exports = async ({ evaluate, wait, waitUntil, downloadPath }) => {
   await wait("document.querySelectorAll('#grid .cell').length === 29 && document.querySelector('#preview').width > 0");
