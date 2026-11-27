@@ -22,5 +22,8 @@ jobs:
         run: |
           git ls-files -z '*.js' '*.cjs' | xargs -0 -n 1 node --check
 
-      - name: Run test suite (18 tests)
+      - name: Run renderer and export tests
         run: node tests/run-tests.cjs
+
+      - name: Test project checkpoints and double strikes
+        run: node --test tests/project.test.cjs
